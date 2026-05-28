@@ -1,0 +1,32 @@
+# Lefthook 配置
+# 文档: https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+
+# 在提交前执行
+pre-commit:
+  parallel: true
+  commands:
+    # 代码格式化检查
+    format-check:
+      glob: '*.{js,ts,jsx,tsx,vue}'
+      run: pnpm fmt:check {staged_files}
+    # ESLint 检查
+    lint:
+      glob: '*.{js,ts,jsx,tsx,vue}'
+      run: pnpm lint:check {staged_files}
+    # TypeScript 类型检查
+    type-check:
+      glob: '*.{ts,vue}'
+      run: pnpm vue-tsc --noEmit
+
+# 提交信息检查
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm commitlint --edit {1}
+
+# 提交前检查
+pre-push:
+  commands:
+    # 构建检查
+    build-check:
+      run: pnpm build
