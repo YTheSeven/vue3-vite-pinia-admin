@@ -6,6 +6,7 @@ import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import tailwindcss from '@tailwindcss/vite';
+import { fileURLToPath, URL } from 'node:url';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -154,11 +155,37 @@ export default defineConfig({
   // 路径解析
   resolve: {
     alias: {
-      '@': '/src',
-      '@components': '/src/components',
-      '@views': '/src/views',
-      '@assets': '/src/assets',
-      '@types': '/src/types',
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
+      '@views': fileURLToPath(new URL('./src/views', import.meta.url)),
+      '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
+      '@types': fileURLToPath(new URL('./src/types', import.meta.url)),
     },
+  },
+  // Vitest 配置
+  test: {
+    // 测试环境
+    environment: 'happy-dom',
+    // 全局导入 Vitest API (describe, it, expect 等)
+    globals: true,
+    // 包含的测试文件
+    include: ['**/*.spec.ts', '**/*.test.ts'],
+    // 排除的目录
+    exclude: ['node_modules', 'dist', '.idea', '.git', '.cache'],
+    // 覆盖率配置
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      include: ['src/**/*'],
+      exclude: ['src/**/*.d.ts', 'src/main.ts', 'src/router/**', 'src/store/**'],
+    },
+    // 测试报告器
+    reporter: ['verbose'],
+    // 设置 UI 测试超时时间
+    testTimeout: 5000,
+    // 钩子超时时间
+    hookTimeout: 10000,
+    // 启用 DOM 快照序列化
+    snapshotSerializers: [],
   },
 });
