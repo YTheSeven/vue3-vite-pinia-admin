@@ -8,5 +8,4 @@
 
 <style>
   /* 全局样式 */
-  @import 'tailwindcss';
 </style>

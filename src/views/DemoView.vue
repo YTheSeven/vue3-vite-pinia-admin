@@ -19,7 +19,9 @@
         <el-button type="success" plain>成功按钮</el-button>
         <el-button type="warning" round>警告按钮</el-button>
         <el-button type="danger" circle>
-          <el-icon><Delete /></el-icon>
+          <el-icon>
+            <Delete />
+          </el-icon>
         </el-button>
         <el-button type="info" :loading="loading" @click="toggleLoading">
           {{ loading ? '加载中...' : '点击加载' }}
@@ -116,6 +118,73 @@
         <el-button type="success" @click="showMessage('success')"> 成功消息 </el-button>
         <el-button type="warning" @click="showMessage('warning')"> 警告消息 </el-button>
         <el-button type="danger" @click="showMessage('error')"> 错误消息 </el-button>
+      </div>
+    </el-card>
+
+    <!-- 图标展示 -->
+    <el-card class="hover:shadow-lg transition-shadow duration-300">
+      <template #header>
+        <span class="text-lg font-semibold">图标自动导入 (unplugin-icons)</span>
+      </template>
+
+      <div class="space-y-4">
+        <!-- 基础图标 -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-600 mb-2">基础图标</h4>
+          <div class="flex flex-wrap gap-4 text-2xl text-blue-500">
+            <i-ep-edit />
+            <i-ep-delete />
+            <i-ep-search />
+            <i-ep-setting />
+            <i-ep-user />
+            <i-ep-home-filled />
+          </div>
+        </div>
+
+        <!-- 按钮中的图标 -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-600 mb-2">按钮中的图标</h4>
+          <div class="flex flex-wrap gap-4">
+            <el-button type="primary">
+              <i-ep-edit class="mr-1" />
+              编辑
+            </el-button>
+            <el-button type="danger">
+              <i-ep-delete class="mr-1" />
+              删除
+            </el-button>
+            <el-button>
+              <i-ep-search class="mr-1" />
+              搜索
+            </el-button>
+            <el-button type="success">
+              <i-ep-circle-check class="mr-1" />
+              成功
+            </el-button>
+          </div>
+        </div>
+
+        <!-- 不同尺寸 -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-600 mb-2">不同尺寸</h4>
+          <div class="flex items-center gap-4">
+            <i-ep-star class="text-base text-gray-400" />
+            <i-ep-star class="text-xl text-gray-500" />
+            <i-ep-star class="text-2xl text-gray-600" />
+            <i-ep-star class="text-4xl text-yellow-400" />
+          </div>
+        </div>
+
+        <!-- 不同颜色 -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-600 mb-2">不同颜色</h4>
+          <div class="flex gap-4 text-3xl">
+            <i-ep-notification class="text-red-500" />
+            <i-ep-circle-check-filled class="text-green-500" />
+            <i-ep-warning class="text-yellow-500" />
+            <i-ep-info-filled class="text-blue-500" />
+          </div>
+        </div>
       </div>
     </el-card>
 
