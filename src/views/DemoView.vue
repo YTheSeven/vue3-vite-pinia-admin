@@ -286,6 +286,7 @@
 </script>
 
 <style scoped>
+  @reference "tailwindcss";
   /* 自定义 Element Plus 样式覆盖 */
   :deep(.el-card__header) {
     @apply bg-gray-50 border-b border-gray-200;
