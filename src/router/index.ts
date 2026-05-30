@@ -140,11 +140,23 @@ router.beforeEach(async (to) => {
   // 动态添加路由（只在登录后执行一次）
   if (!hasAddedRoutes) {
     try {
-      await addDynamicRoutes();
+      const dynamicRoutes = await addDynamicRoutes();
 
-      // 动态添加路由后，需要重新导航到目标路由
-      // 使用 replace: true 避免历史记录问题
-      return { ...to, replace: true };
+      // 动态添加路由后，手动触发重新导航
+      // 检查当前目标路由是否在刚添加的动态路由中
+      const routeExists = dynamicRoutes.some(
+        (route) => route.path === to.path || (to.name && route.name === to.name)
+      );
+
+      if (routeExists || to.matched.length === 0) {
+        // 路由已添加，使用 replace 重新导航到目标路由
+        // 返回 false 阻止当前导航，让 router.replace 处理新导航
+        await router.replace({ path: to.fullPath, replace: true });
+        return false;
+      }
+
+      // 如果路由已经匹配，继续正常导航
+      return;
     } catch (error) {
       console.error('添加动态路由失败:', error);
       // 重置 token 并跳转到登录页

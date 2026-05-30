@@ -1,1 +1,84 @@
 @import 'tailwindcss';
+
+/* ============================================
+   全局滚动条样式 - 灰色调设计
+   ============================================ */
+
+/* WebKit 浏览器 (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 水平滚动条 */
+::-webkit-scrollbar-thumb:horizontal {
+  background: rgba(148, 163, 184, 0.4);
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+  background: rgba(100, 116, 139, 0.7);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+/* ============================================
+   变体样式类
+   ============================================ */
+
+/* 深色背景区域 - 亮灰色 */
+.scrollbar-dark ::-webkit-scrollbar-thumb {
+  background: rgba(203, 213, 225, 0.5);
+}
+
+.scrollbar-dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(203, 213, 225, 0.9);
+}
+
+.scrollbar-dark * {
+  scrollbar-color: rgba(203, 213, 225, 0.5) transparent;
+}
+
+/* 极简风格 - 更细的滚动条 */
+.scrollbar-minimal ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-minimal ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 2px;
+}
+
+.scrollbar-minimal ::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.6);
+}
+
+.scrollbar-minimal * {
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}

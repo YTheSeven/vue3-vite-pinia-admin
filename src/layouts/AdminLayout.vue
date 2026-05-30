@@ -3,7 +3,7 @@
     <!-- 侧边栏 -->
     <el-aside
       :width="isCollapse ? '64px' : '200px'"
-      class="bg-slate-800 transition-all duration-300"
+      class="bg-slate-800 transition-all duration-300 h-screen overflow-y-auto"
     >
       <div class="h-15 flex items-center justify-center px-4 border-b border-slate-900">
         <el-icon :size="32" color="#409EFF"><ElementPlus /></el-icon>
@@ -15,7 +15,7 @@
         </span>
       </div>
 
-      <el-scrollbar>
+      <el-scrollbar class="h-[calc(100vh-60px)]!">
         <el-menu
           :default-active="activeMenu"
           :collapse="isCollapse"
@@ -32,7 +32,7 @@
       </el-scrollbar>
     </el-aside>
 
-    <el-container class="bg-gray-100">
+    <el-container class="bg-gray-100 h-screen overflow-y-auto">
       <!-- 顶部导航栏 -->
       <el-header class="h-15 bg-white shadow-sm flex items-center justify-between px-5">
         <div class="flex items-center gap-4">

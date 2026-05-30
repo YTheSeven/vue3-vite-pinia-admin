@@ -36,14 +36,6 @@
           />
         </el-form-item>
 
-        <el-form-item label="登录角色">
-          <el-radio-group v-model="loginRole" class="w-full flex">
-            <el-radio-button label="admin" class="flex-1">管理员</el-radio-button>
-            <el-radio-button label="operator" class="flex-1">运营</el-radio-button>
-            <el-radio-button label="user" class="flex-1">普通用户</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-
         <el-form-item>
           <div class="flex justify-between items-center w-full">
             <el-checkbox v-model="loginForm.remember">记住我</el-checkbox>
@@ -63,10 +55,21 @@
         </el-form-item>
 
         <div class="mt-5 p-4 bg-gray-100 rounded text-sm text-gray-600">
-          <p class="font-bold text-gray-700 mb-2">测试账号：</p>
-          <p class="my-1">管理员: 拥有所有权限</p>
-          <p class="my-1">运营: 订单管理</p>
-          <p class="my-1">用户: 仅个人中心</p>
+          <p class="font-bold text-gray-700 mb-2">测试账号（密码任意）：</p>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-medium">admin</span>
+              <span class="text-xs text-gray-500">管理员 - 所有权限</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-medium">operator</span>
+              <span class="text-xs text-gray-500">运营 - 订单管理</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-medium">user</span>
+              <span class="text-xs text-gray-500">普通用户 - 仅个人中心</span>
+            </div>
+          </div>
         </div>
       </el-form>
     </div>
@@ -86,7 +89,6 @@
 
   const loginFormRef = ref();
   const loading = ref(false);
-  const loginRole = ref('admin');
 
   const loginForm = reactive({
     username: 'admin',
@@ -106,41 +108,13 @@
       await loginFormRef.value.validate();
       loading.value = true;
 
-      // 根据选择的角色设置用户信息
-      const roleConfigs: Record<
-        string,
-        { nickname: string; roles: string[]; permissions: string[] }
-      > = {
-        admin: {
-          nickname: '超级管理员',
-          roles: ['admin'],
-          permissions: ['*'],
-        },
-        operator: {
-          nickname: '运营专员',
-          roles: ['operator'],
-          permissions: ['order:view', 'order:edit'],
-        },
-        user: {
-          nickname: '普通用户',
-          roles: ['user'],
-          permissions: ['profile:view'],
-        },
-      };
-
-      const config = roleConfigs[loginRole.value];
-
-      // 调用登录
+      // 根据输入的用户名登录
+      // userStore.login 会根据用户名自动分配对应角色
       await userStore.login({
-        ...loginForm,
+        username: loginForm.username,
+        password: loginForm.password,
+        remember: loginForm.remember,
       });
-
-      // 更新用户信息（角色和权限）
-      if (userStore.userInfo) {
-        userStore.userInfo.roles = config.roles;
-        userStore.userInfo.permissions = config.permissions;
-        userStore.userInfo.nickname = config.nickname;
-      }
 
       // 加载动态路由
       await addDynamicRoutes();

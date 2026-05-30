@@ -1,4 +1,6 @@
 import { delay } from '@/utils/utils';
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
 import { usePermissionStore } from './permission';
 import { resetRouter, resetHasAddedRoutes } from '@/router';
 
@@ -95,14 +97,41 @@ export const useUserStore = defineStore(
         // 模拟登录成功
         await delay(800); // 模拟网络延迟
 
+        // 根据用户名分配不同角色
+        let roles: string[];
+        let permissions: string[];
+        let nickname: string;
+
+        switch (loginForm.username) {
+          case 'admin':
+            roles = ['admin'];
+            permissions = ['*'];
+            nickname = '管理员';
+            break;
+          case 'operator':
+            roles = ['operator'];
+            permissions = ['order:view', 'order:edit'];
+            nickname = '运营人员';
+            break;
+          case 'user':
+            roles = ['user'];
+            permissions = ['profile:view'];
+            nickname = '普通用户';
+            break;
+          default:
+            roles = ['user'];
+            permissions = ['profile:view'];
+            nickname = '访客';
+        }
+
         const mockToken = `mock_token_${Date.now()}`;
         const mockUserInfo: UserInfo = {
           id: 1,
           username: loginForm.username,
-          nickname: '管理员',
+          nickname,
           avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-          roles: ['admin'],
-          permissions: ['*'],
+          roles,
+          permissions,
         };
 
         // 保存到 store 和 localStorage

@@ -49,14 +49,14 @@
     <!-- 图表区域 -->
     <el-row :gutter="20" class="mb-5">
       <el-col :xs="24" :lg="16">
-        <el-card class="h-[400px] flex flex-col" shadow="hover">
+        <el-card class="h-100 flex flex-col" shadow="hover">
           <template #header>
             <div class="flex justify-between items-center font-semibold">
               <span>访问趋势</span>
               <el-radio-group v-model="chartType" size="small">
-                <el-radio-button label="week">本周</el-radio-button>
-                <el-radio-button label="month">本月</el-radio-button>
-                <el-radio-button label="year">本年</el-radio-button>
+                <el-radio-button value="week">本周</el-radio-button>
+                <el-radio-button value="month">本月</el-radio-button>
+                <el-radio-button value="year">本年</el-radio-button>
               </el-radio-group>
             </div>
           </template>
@@ -65,7 +65,7 @@
               <div
                 v-for="i in 7"
                 :key="i"
-                class="w-10 bg-gradient-to-t from-blue-500 to-green-500 rounded-t transition-all duration-500"
+                class="w-10 bg-linear-to-t from-blue-500 to-green-500 rounded-t transition-all duration-500"
                 :style="{ height: `${Math.random() * 200 + 50}px` }"
               ></div>
             </div>
@@ -80,7 +80,7 @@
         </el-card>
       </el-col>
       <el-col :xs="24" :lg="8">
-        <el-card class="h-[400px] flex flex-col" shadow="hover">
+        <el-card class="h-100 flex flex-col" shadow="hover">
           <template #header>
             <div class="flex justify-between items-center font-semibold">
               <span>待办事项</span>
@@ -136,22 +136,22 @@
         <div class="font-semibold">当前登录信息（调试用）</div>
       </template>
       <el-descriptions :column="2" border>
-        <el-descriptions-item label="用户名">{{
-          userStore.userInfo?.username
-        }}</el-descriptions-item>
+        <el-descriptions-item label="用户名">
+          {{ userStore.userInfo?.username }}
+        </el-descriptions-item>
         <el-descriptions-item label="昵称">{{ userStore.userInfo?.nickname }}</el-descriptions-item>
-        <el-descriptions-item label="登录状态">{{
-          userStore.isLoggedIn ? '已登录' : '未登录'
-        }}</el-descriptions-item>
-        <el-descriptions-item label="Token">{{
-          userStore.token ? '已获取' : '无'
-        }}</el-descriptions-item>
-        <el-descriptions-item label="角色">{{
-          userStore.userInfo?.roles?.join(', ') || '无'
-        }}</el-descriptions-item>
-        <el-descriptions-item label="权限">{{
-          userStore.userInfo?.permissions?.join(', ') || '无'
-        }}</el-descriptions-item>
+        <el-descriptions-item label="登录状态">
+          {{ userStore.isLoggedIn ? '已登录' : '未登录' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="Token">
+          {{ userStore.token ? '已获取' : '无' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="角色">
+          {{ userStore.userInfo?.roles?.join(', ') || '无' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="权限">
+          {{ userStore.userInfo?.permissions?.join(', ') || '无' }}
+        </el-descriptions-item>
       </el-descriptions>
     </el-card>
   </div>
