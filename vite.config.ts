@@ -5,6 +5,7 @@ import Components from 'unplugin-vue-components/vite';
 import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import ElementPlus from 'unplugin-element-plus/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath, URL } from 'node:url';
 
@@ -46,14 +47,11 @@ export default defineConfig({
       autoInstall: true,
       compiler: 'vue3',
     }),
+    // Element Plus 自动导入样式
+    ElementPlus({
+      useSource: true,
+    }),
   ],
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@use "element-plus/theme-chalk/src/index.scss" as *;`,
-      },
-    },
-  },
   server: {
     port: 3000,
     // open: true,
@@ -156,10 +154,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
-      '@views': fileURLToPath(new URL('./src/views', import.meta.url)),
-      '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
-      '@types': fileURLToPath(new URL('./src/types', import.meta.url)),
     },
   },
 });
