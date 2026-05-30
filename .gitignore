@@ -12,10 +12,6 @@ dist
 dist-ssr
 *.local
 
-# 自动导入的文件
-auto-imports.d.ts
-components.d.ts
-
 # vitest
 .vitest/
 

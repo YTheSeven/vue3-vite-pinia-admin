@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
+    "alova": "^3.5.1",
     "element-plus": "^2.14.0",
     "pinia": "^3.0.4",
     "tailwindcss": "^4.3.0",
@@ -57,5 +58,8 @@
     "vite": "^8.0.12",
     "vitest": "^4.1.7",
     "vue-tsc": "^3.2.8"
+  },
+  "volta": {
+    "node": "22.22.2"
   }
 }
