@@ -13,8 +13,12 @@
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow"
     />
 
-    <div class="w-105 p-10 bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl relative z-10">
-      <h2 class="text-center mb-8 text-2xl text-gray-800 font-semibold">管理系统登录</h2>
+    <div
+      class="w-105 p-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl dark:shadow-slate-900/50 relative z-10"
+    >
+      <h2 class="text-center mb-8 text-2xl text-gray-800 dark:text-white font-semibold">
+        管理系统登录
+      </h2>
       <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" @keyup.enter="handleLogin">
         <el-form-item prop="username">
           <el-input
@@ -54,20 +58,22 @@
           </el-button>
         </el-form-item>
 
-        <div class="mt-5 p-4 bg-gray-100 rounded text-sm text-gray-600">
-          <p class="font-bold text-gray-700 mb-2">测试账号（密码任意）：</p>
+        <div
+          class="mt-5 p-4 bg-gray-100 dark:bg-slate-700 rounded text-sm text-gray-600 dark:text-gray-300"
+        >
+          <p class="font-bold text-gray-700 dark:text-gray-200 mb-2">测试账号（密码任意）：</p>
           <div class="space-y-2">
             <div class="flex items-center justify-between">
-              <span class="font-medium">admin</span>
-              <span class="text-xs text-gray-500">管理员 - 所有权限</span>
+              <span class="font-medium text-gray-800 dark:text-gray-200">admin</span>
+              <span class="text-xs text-gray-500 dark:text-gray-400">管理员 - 所有权限</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="font-medium">operator</span>
-              <span class="text-xs text-gray-500">运营 - 订单管理</span>
+              <span class="font-medium text-gray-800 dark:text-gray-200">operator</span>
+              <span class="text-xs text-gray-500 dark:text-gray-400">运营 - 订单管理</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="font-medium">user</span>
-              <span class="text-xs text-gray-500">普通用户 - 仅个人中心</span>
+              <span class="font-medium text-gray-800 dark:text-gray-200">user</span>
+              <span class="text-xs text-gray-500 dark:text-gray-400">普通用户 - 仅个人中心</span>
             </div>
           </div>
         </div>

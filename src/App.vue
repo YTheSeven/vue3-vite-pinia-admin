@@ -1,9 +1,14 @@
 <template>
-  <router-view />
+  <el-config-provider>
+    <router-view />
+  </el-config-provider>
 </template>
 
 <script setup lang="ts">
-  // App.vue 作为根组件，只负责渲染路由视图
+  import { useTheme } from '@/composables/useTheme';
+
+  // 初始化主题
+  useTheme();
 </script>
 
 <style>

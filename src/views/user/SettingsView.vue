@@ -259,13 +259,13 @@
                 <p class="text-sm text-gray-500">选择您喜欢的界面配色方案</p>
               </div>
               <el-radio-group v-model="preferences.theme">
-                <el-radio-button label="light">
+                <el-radio-button value="light">
                   <el-icon class="mr-1"><Sunny /></el-icon>浅色
                 </el-radio-button>
-                <el-radio-button label="dark">
+                <el-radio-button value="dark">
                   <el-icon class="mr-1"><Moon /></el-icon>深色
                 </el-radio-button>
-                <el-radio-button label="auto">
+                <el-radio-button value="auto">
                   <el-icon class="mr-1"><Refresh /></el-icon>跟随系统
                 </el-radio-button>
               </el-radio-group>
@@ -294,8 +294,8 @@
                 <p class="text-sm text-gray-500">默认展开或收起侧边栏</p>
               </div>
               <el-radio-group v-model="preferences.sidebar">
-                <el-radio-button label="expanded">展开</el-radio-button>
-                <el-radio-button label="collapsed">收起</el-radio-button>
+                <el-radio-button value="expanded">展开</el-radio-button>
+                <el-radio-button value="collapsed">收起</el-radio-button>
               </el-radio-group>
             </div>
 
@@ -317,9 +317,9 @@
                 <p class="text-sm text-gray-500">调整表格行高和间距</p>
               </div>
               <el-radio-group v-model="preferences.tableDensity">
-                <el-radio-button label="compact">紧凑</el-radio-button>
-                <el-radio-button label="default">默认</el-radio-button>
-                <el-radio-button label="loose">宽松</el-radio-button>
+                <el-radio-button value="compact">紧凑</el-radio-button>
+                <el-radio-button value="default">默认</el-radio-button>
+                <el-radio-button value="loose">宽松</el-radio-button>
               </el-radio-group>
             </div>
 

@@ -26,7 +26,6 @@ export interface DynamicRoute {
 const componentMap: Record<string, () => Promise<Component>> = {
   Layout: () => import('@/layouts/AdminLayout.vue'),
   Dashboard: () => import('@/views/dashboard/DashboardView.vue'),
-  Demo: () => import('@/views/DemoView.vue'),
   UserManage: () => import('@/views/system/UserManageView.vue'),
   RoleManage: () => import('@/views/system/RoleManageView.vue'),
   PermissionManage: () => import('@/views/system/PermissionManageView.vue'),
@@ -34,6 +33,7 @@ const componentMap: Record<string, () => Promise<Component>> = {
   OrderDetail: () => import('@/views/business/OrderDetailView.vue'),
   Profile: () => import('@/views/user/ProfileView.vue'),
   Settings: () => import('@/views/user/SettingsView.vue'),
+  UseRequestDemo: () => import('@/views/demo/UseRequestDemo.vue'),
 };
 
 export const usePermissionStore = defineStore('permission', () => {
@@ -105,6 +105,18 @@ export const usePermissionStore = defineStore('permission', () => {
         name: 'Dashboard',
         component: 'Dashboard',
         meta: { title: '首页', icon: 'HomeFilled' },
+      },
+      {
+        path: '/demo/use-request',
+        name: 'UseRequestDemo',
+        component: 'UseRequestDemo',
+        meta: {
+          title: 'useRequest演示',
+          icon: 'Document',
+          group: 'demo',
+          groupTitle: '组件演示',
+          groupIcon: 'Box',
+        },
       },
       {
         path: '/business/orders',

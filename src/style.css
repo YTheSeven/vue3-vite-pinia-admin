@@ -1,4 +1,32 @@
 @import 'tailwindcss';
+@import 'element-plus/theme-chalk/dark/css-vars.css';
+
+/* TailwindCSS v4 - 配置 dark 模式使用 class 策略 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================
+   Tailwind Dark Mode 配置
+   ============================================
+   
+   【简单暗黑模式指南】
+   
+   只需记住一个规则：在原有类名后加 dark: 前缀
+   
+   示例：
+   - 背景：class="bg-white dark:bg-slate-800"
+   - 文字：class="text-gray-800 dark:text-gray-200"
+   - 边框：class="border-gray-200 dark:border-slate-700"
+   
+   常用对应关系：
+   - white ↔ slate-800/900
+   - gray-50 ↔ slate-800
+   - gray-100 ↔ slate-700
+   - gray-200 ↔ slate-600
+   - gray-800 ↔ gray-200
+   - text-gray-800 ↔ text-gray-200
+   - text-gray-600 ↔ text-gray-400
+   - text-gray-500 ↔ text-gray-400
+   ============================================ */
 
 /* ============================================
    全局滚动条样式 - 灰色调设计

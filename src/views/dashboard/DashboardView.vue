@@ -4,8 +4,12 @@
     <el-card class="mb-5" shadow="hover">
       <div class="flex flex-col sm:flex-row justify-between items-center gap-5">
         <div class="text-center sm:text-left">
-          <h2 class="text-2xl font-semibold text-gray-800 mb-2">欢迎回来，{{ displayName }}！</h2>
-          <p class="text-sm text-gray-500 mb-2">今天是 {{ currentDate }}，祝您工作愉快！</p>
+          <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            欢迎回来，{{ displayName }}！
+          </h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            今天是 {{ currentDate }}，祝您工作愉快！
+          </p>
           <div
             v-if="userStore.userInfo?.roles"
             class="flex flex-wrap justify-center sm:justify-start gap-2"
@@ -38,8 +42,10 @@
               <el-icon><component :is="stat.icon" /></el-icon>
             </div>
             <div>
-              <div class="text-2xl font-bold text-gray-800 mb-1">{{ stat.value }}</div>
-              <div class="text-sm text-gray-500">{{ stat.label }}</div>
+              <div class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-1">
+                {{ stat.value }}
+              </div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">{{ stat.label }}</div>
             </div>
           </div>
         </el-card>
@@ -61,7 +67,9 @@
             </div>
           </template>
           <div class="flex-1 flex flex-col">
-            <div class="flex-1 flex items-end justify-around py-5 border-b border-gray-200">
+            <div
+              class="flex-1 flex items-end justify-around py-5 border-b border-gray-200 dark:border-gray-700"
+            >
               <div
                 v-for="i in 7"
                 :key="i"
@@ -69,7 +77,7 @@
                 :style="{ height: `${Math.random() * 200 + 50}px` }"
               ></div>
             </div>
-            <div class="flex justify-around pt-3 text-xs text-gray-500">
+            <div class="flex justify-around pt-3 text-xs text-gray-500 dark:text-gray-400">
               <span
                 v-for="day in ['周一', '周二', '周三', '周四', '周五', '周六', '周日']"
                 :key="day"
@@ -94,10 +102,16 @@
               <div
                 v-for="(todo, index) in todos"
                 :key="index"
-                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                class="flex justify-between items-center p-3 bg-gray-50 dark:bg-slate-700 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
               >
                 <el-checkbox v-model="todo.done">
-                  <span :class="{ 'line-through text-gray-400': todo.done }">{{ todo.text }}</span>
+                  <span
+                    :class="{
+                      'line-through text-gray-400 dark:text-gray-500': todo.done,
+                      'text-gray-700 dark:text-gray-300': !todo.done,
+                    }"
+                    >{{ todo.text }}</span
+                  >
                 </el-checkbox>
                 <el-tag :type="todo.priority as any" size="small">{{ todo.priorityText }}</el-tag>
               </div>
@@ -116,7 +130,7 @@
         <div
           v-for="link in quickLinks"
           :key="link.name"
-          class="flex flex-col items-center gap-3 p-4 rounded-xl cursor-pointer hover:bg-gray-50 hover:-translate-y-1 transition-all"
+          class="flex flex-col items-center gap-3 p-4 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 hover:-translate-y-1 transition-all"
           @click="handleLinkClick(link)"
         >
           <div
@@ -125,7 +139,7 @@
           >
             <el-icon :size="24"><component :is="link.icon" /></el-icon>
           </div>
-          <span class="text-sm text-gray-600">{{ link.name }}</span>
+          <span class="text-sm text-gray-600 dark:text-gray-300">{{ link.name }}</span>
         </div>
       </div>
     </el-card>
@@ -244,3 +258,10 @@
     }
   };
 </script>
+
+<style scoped>
+  /* 使用 CSS 变量确保文本颜色随主题变化 */
+  div {
+    color: var(--main-text);
+  }
+</style>

@@ -1,11 +1,13 @@
 <template>
-  <el-container class="min-h-screen">
+  <el-container class="min-h-screen bg-gray-100 dark:bg-slate-900">
     <!-- 侧边栏 -->
     <el-aside
       :width="isCollapse ? '64px' : '200px'"
-      class="bg-slate-800 transition-all duration-300 h-screen overflow-y-auto"
+      class="bg-slate-800 dark:bg-slate-950 transition-all duration-300 h-screen overflow-y-auto"
     >
-      <div class="h-15 flex items-center justify-center px-4 border-b border-slate-900">
+      <div
+        class="h-15 flex items-center justify-center px-4 border-b border-slate-900 dark:border-slate-800"
+      >
         <el-icon :size="32" color="#409EFF"><ElementPlus /></el-icon>
         <span
           v-show="!isCollapse"
@@ -21,8 +23,8 @@
           :collapse="isCollapse"
           :collapse-transition="false"
           router
-          class="border-r-0 bg-slate-800!"
-          background-color="#1e293b"
+          class="border-r-0! bg-slate-800! dark:bg-slate-950!"
+          background-color="transparent"
           text-color="#94a3b8"
           active-text-color="#60a5fa"
         >
@@ -32,12 +34,14 @@
       </el-scrollbar>
     </el-aside>
 
-    <el-container class="bg-gray-100 h-screen overflow-y-auto">
+    <el-container class="bg-gray-100 dark:bg-slate-900 h-screen overflow-y-auto">
       <!-- 顶部导航栏 -->
-      <el-header class="h-15 bg-white shadow-sm flex items-center justify-between px-5">
+      <el-header
+        class="h-15 bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700/50 flex items-center justify-between px-5"
+      >
         <div class="flex items-center gap-4">
           <el-icon
-            class="text-xl cursor-pointer text-gray-600 hover:text-blue-500 transition-colors"
+            class="text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
             @click="toggleCollapse"
           >
             <Fold v-if="!isCollapse" />
@@ -47,9 +51,19 @@
         </div>
 
         <div class="flex items-center gap-5">
+          <el-tooltip :content="themeStore.themeText" placement="bottom">
+            <el-icon
+              class="text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+              @click="themeStore.toggleTheme"
+            >
+              <Sunny v-if="!themeStore.isDark" />
+              <Moon v-else />
+            </el-icon>
+          </el-tooltip>
+
           <el-tooltip content="全屏" placement="bottom">
             <el-icon
-              class="text-xl cursor-pointer text-gray-600 hover:text-blue-500 transition-colors"
+              class="text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
               @click="toggleFullscreen"
             >
               <FullScreen />
@@ -58,11 +72,13 @@
 
           <el-dropdown @command="handleCommand">
             <div
-              class="flex items-center gap-2 cursor-pointer p-1 rounded hover:bg-gray-100 transition-colors"
+              class="flex items-center gap-2 cursor-pointer p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
             >
               <el-avatar :size="32" :src="userStore.userInfo?.avatar" />
-              <span class="text-sm text-gray-600 max-w-25 truncate">{{ displayName }}</span>
-              <el-icon><ArrowDown /></el-icon>
+              <span class="text-sm text-gray-600 dark:text-gray-300 max-w-25 truncate">{{
+                displayName
+              }}</span>
+              <el-icon class="text-gray-600 dark:text-gray-400"><ArrowDown /></el-icon>
             </div>
             <template #dropdown>
               <el-dropdown-menu>
@@ -82,7 +98,7 @@
       </el-header>
 
       <!-- 主内容区 -->
-      <el-main class="p-5 overflow-auto">
+      <el-main class="p-5 overflow-auto bg-gray-100 dark:bg-slate-900">
         <router-view v-slot="{ Component }">
           <transition name="fade-transform" mode="out-in">
             <component :is="Component" />
@@ -106,9 +122,12 @@
     User,
     Setting,
     SwitchButton,
+    Sunny,
+    Moon,
   } from '@element-plus/icons-vue';
   import { useUserStore } from '@/store/modules/user';
   import { usePermissionStore } from '@/store/modules/permission';
+  import { useThemeStore } from '@/store/modules/theme';
   import Breadcrumb from './components/Breadcrumb.vue';
   import SidebarMenu from './components/SidebarMenu.vue';
 
@@ -116,6 +135,7 @@
   const router = useRouter();
   const userStore = useUserStore();
   const permissionStore = usePermissionStore();
+  const themeStore = useThemeStore();
 
   // 侧边栏折叠状态
   const isCollapse = ref(false);
