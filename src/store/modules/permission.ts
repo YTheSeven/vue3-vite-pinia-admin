@@ -308,12 +308,12 @@ export const usePermissionStore = defineStore('permission', () => {
     const result: RouteRecordRaw[] = [];
 
     for (const route of routes) {
-      // 检查角色权限
+      // 检查角色权限，如果路由需要特定角色但用户没有，则跳过
       if (route.meta.roles && !hasRequiredRole(route.meta.roles, roles)) {
         continue;
       }
 
-      // 检查权限码
+      // 检查权限码，如果路由需要特定权限但用户没有，则跳过
       if (route.meta.permissions && !hasRequiredPermission(route.meta.permissions, permissions)) {
         continue;
       }

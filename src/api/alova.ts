@@ -1,9 +1,9 @@
 import { createAlova } from 'alova';
-import type { Method, RequestBody } from 'alova';
+import type { RequestBody } from 'alova';
 import adapterFetch from 'alova/fetch';
 import VueHook from 'alova/vue';
 import { ElMessage, ElNotification } from 'element-plus';
-import type { ResponseType, RequestConfig, PageResult } from '@/types/api';
+import type { ResponseType, RequestConfig } from '@/types/request';
 import { useUserStore } from '@/store/modules/user';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL ?? '/api';
@@ -74,7 +74,7 @@ export const alovaInstance = createAlova({
     // 如果是mock环境，添加apifox的token
     if (import.meta.env.VITE_USE_MOCK === 'true') {
       (method.config.headers as Record<string, string>).apifoxToken =
-        import.meta.env.VITE_MOCK_TOKEN || '';
+        import.meta.env.VITE_MOCK_TOKEN ?? '';
     }
 
     // 请求日志（开发环境）
@@ -253,31 +253,4 @@ export const request = {
   patch<T = unknown>(url: string, data?: RequestBody, config: RequestConfig = {}) {
     return alovaInstance.Patch<T>(url, data, config);
   },
-};
-
-// 分页请求封装
-export const createPaginationRequest = <T = unknown>(
-  method: Method,
-  transform?: (data: unknown) => PageResult<T>
-) => {
-  return {
-    // 发送请求并转换数据
-    async fetch() {
-      const data = await method.send();
-      if (transform) {
-        return transform(data);
-      }
-      return data as PageResult<T>;
-    },
-
-    // 刷新数据
-    async refresh() {
-      await method.send();
-    },
-
-    // 中止请求
-    async abort() {
-      await method.abort();
-    },
-  };
 };

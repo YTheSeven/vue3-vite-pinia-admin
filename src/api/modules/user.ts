@@ -1,70 +1,49 @@
-import { request, alovaInstance } from '../alova';
-import type { LoginParams, LoginResult, UserInfo, PageResult } from '@/types/api';
+import { request } from '../alova';
+import type {
+  LoginParams,
+  LoginResult,
+  RegisterParams,
+  ChangePasswordParams,
+  DeleteUserParams,
+  UserInfo,
+} from '@/types/modules/user';
 
 /**
- * 用户相关 API 模块
- * 示例：实际使用时根据后端接口调整
+ * 用户 API 模块
  */
 export const userApi = {
   /**
    * 用户登录
+   * @param data 登录参数
    */
-  login: (params: LoginParams) => {
-    return request.post<LoginResult>('/auth/login', params);
-  },
+  login: (data: LoginParams) => request.post<LoginResult>('/users/login', data),
+
+  /**
+   * 用户注册
+   * @param data 注册参数
+   */
+  register: (data: RegisterParams) => request.post('/users/register', data),
 
   /**
    * 用户登出
    */
-  logout: () => {
-    return request.post('/auth/logout');
-  },
+  logout: () => request.post('/users/logout'),
 
   /**
-   * 获取当前用户信息
+   * 获取用户列表
    */
-  getUserInfo: () => {
-    return request.get<UserInfo>('/user/info');
-  },
-
-  /**
-   * 刷新 Token
-   */
-  refreshToken: (refreshToken: string) => {
-    return request.post<LoginResult>('/auth/refresh', { refreshToken });
-  },
-
-  /**
-   * 获取用户列表（分页）
-   */
-  getUserList: (params: { page?: number; size?: number; keyword?: string }) => {
-    return request.get<PageResult<UserInfo>>('/user/list', { params });
-  },
-
-  /**
-   * 更新用户信息
-   */
-  updateUserInfo: (data: Partial<UserInfo>) => {
-    return request.put<UserInfo>('/user/info', data);
-  },
+  getUserList: () => request.get<UserInfo[]>('/users/list'),
 
   /**
    * 修改密码
+   * @param data 修改密码参数
    */
-  changePassword: (data: { oldPassword: string; newPassword: string }) => {
-    return request.post('/user/password', data);
-  },
+  changePassword: (data: ChangePasswordParams) => request.patch('/users/password', data),
 
   /**
-   * 上传头像
+   * 删除用户
+   * @param data 删除用户参数
+   * @deprecated 该接口已废弃
    */
-  uploadAvatar: (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return alovaInstance.Post<string>('/user/avatar', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  },
+  deleteUser: (data: DeleteUserParams) => request.delete('/users/delete', { data }),
 };

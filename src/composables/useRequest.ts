@@ -1,5 +1,5 @@
 import type { Method, AlovaGenerics } from 'alova';
-import type { PageResult } from '@/types/api';
+import type { PageResult } from '@/types/request';
 import { createDebouncedFunction } from '@/utils/utils';
 
 /**

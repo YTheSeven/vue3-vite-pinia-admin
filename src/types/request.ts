@@ -1,11 +1,8 @@
 // ============================================
-// 导入三方类型定义
+// 请求相关类型定义
 // ============================================
-import type { Ref, ComputedRef } from 'vue';
 
-// ============================================
-// 通用响应类型定义
-// ============================================
+import type { Ref, ComputedRef } from 'vue';
 
 /**
  * 标准 API 响应结构
@@ -60,10 +57,6 @@ export interface PageResult<T = unknown> {
   hasPrev?: boolean;
 }
 
-// ============================================
-// 请求配置类型定义
-// ============================================
-
 /**
  * 请求配置选项
  */
@@ -102,49 +95,6 @@ export interface UploadConfig extends RequestConfig {
   /** 上传进度回调 */
   onProgress?: (progress: number) => void;
 }
-
-// ============================================
-// 业务类型定义（可按模块扩展）
-// ============================================
-
-/**
- * 用户信息
- */
-export interface UserInfo {
-  id: string | number;
-  username: string;
-  nickname?: string;
-  avatar?: string;
-  email?: string;
-  phone?: string;
-  roles?: string[];
-  permissions?: string[];
-  [key: string]: unknown;
-}
-
-/**
- * 登录请求参数
- */
-export interface LoginParams {
-  username: string;
-  password: string;
-  captcha?: string;
-  remember?: boolean;
-}
-
-/**
- * 登录响应数据
- */
-export interface LoginResult {
-  token: string;
-  refreshToken?: string;
-  expires?: number;
-  user?: UserInfo;
-}
-
-// ============================================
-// 请求状态 Hook 返回类型（配合 Vue 使用）
-// ============================================
 
 /**
  * 请求状态
