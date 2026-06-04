@@ -28,6 +28,7 @@ export interface CartListParams {
  */
 export interface AddCartParams {
   goods_id: string;
+  number: string;
 }
 
 /**

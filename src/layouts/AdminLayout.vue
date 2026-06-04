@@ -1,217 +1,98 @@
 <template>
   <el-container class="min-h-screen bg-gray-100 dark:bg-slate-900">
-    <!-- 侧边栏 -->
-    <el-aside
-      :width="isCollapse ? '64px' : '200px'"
-      class="bg-slate-800 dark:bg-slate-950 transition-all duration-300 h-screen overflow-y-auto"
+    <!-- 桌面端侧边栏 -->
+    <sidebar
+      v-if="!isMobile"
+      :is-collapse="isCollapse"
+      :active-menu="activeMenu"
+      :menus="sidebarMenus"
+      :is-mobile="false"
+    />
+
+    <!-- 移动端抽屉侧边栏 -->
+    <el-drawer
+      v-else
+      v-model="showDrawer"
+      direction="ltr"
+      size="70%"
+      :with-header="false"
+      class="mobile-sidebar-drawer"
+      @close="closeDrawer"
     >
-      <div
-        class="h-15 flex items-center justify-center px-4 border-b border-slate-900 dark:border-slate-800"
-      >
-        <el-icon :size="32" color="#409EFF"><ElementPlus /></el-icon>
-        <span
-          v-show="!isCollapse"
-          class="ml-3 text-base font-semibold text-white whitespace-nowrap"
-        >
-          管理系统
-        </span>
-      </div>
+      <sidebar
+        :is-collapse="false"
+        :active-menu="activeMenu"
+        :menus="sidebarMenus"
+        :is-mobile="true"
+        @menu-select="closeDrawer"
+      />
+    </el-drawer>
 
-      <el-scrollbar class="h-[calc(100vh-60px)]!">
-        <el-menu
-          :default-active="activeMenu"
-          :collapse="isCollapse"
-          :collapse-transition="false"
-          router
-          class="border-r-0! bg-slate-800! dark:bg-slate-950!"
-          background-color="transparent"
-          text-color="#94a3b8"
-          active-text-color="#60a5fa"
-        >
-          <!-- 动态菜单 -->
-          <sidebar-menu :menus="sidebarMenus" />
-        </el-menu>
-      </el-scrollbar>
-    </el-aside>
-
-    <el-container class="bg-gray-100 dark:bg-slate-900 h-screen overflow-y-auto">
+    <el-container class="bg-gray-100 dark:bg-slate-900 h-screen overflow-y-auto flex-col!">
       <!-- 顶部导航栏 -->
-      <el-header
-        class="h-15 bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700/50 flex items-center justify-between px-5"
-      >
-        <div class="flex items-center gap-4">
-          <el-icon
-            class="text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-            @click="toggleCollapse"
-          >
-            <Fold v-if="!isCollapse" />
-            <Expand v-else />
-          </el-icon>
-          <breadcrumb />
-        </div>
-
-        <div class="flex items-center gap-5">
-          <el-tooltip :content="themeStore.themeText" placement="bottom">
-            <el-icon
-              class="text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-              @click="themeStore.toggleTheme"
-            >
-              <Sunny v-if="!themeStore.isDark" />
-              <Moon v-else />
-            </el-icon>
-          </el-tooltip>
-
-          <el-tooltip content="全屏" placement="bottom">
-            <el-icon
-              class="text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-              @click="toggleFullscreen"
-            >
-              <FullScreen />
-            </el-icon>
-          </el-tooltip>
-
-          <el-dropdown @command="handleCommand">
-            <div
-              class="flex items-center gap-2 cursor-pointer p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-            >
-              <el-avatar :size="32" :src="userStore.userInfo?.avatar" />
-              <span class="text-sm text-gray-600 dark:text-gray-300 max-w-25 truncate">{{
-                displayName
-              }}</span>
-              <el-icon class="text-gray-600 dark:text-gray-400"><ArrowDown /></el-icon>
-            </div>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="profile">
-                  <el-icon><User /></el-icon>个人中心
-                </el-dropdown-item>
-                <el-dropdown-item command="settings">
-                  <el-icon><Setting /></el-icon>系统设置
-                </el-dropdown-item>
-                <el-dropdown-item divided command="logout">
-                  <el-icon><SwitchButton /></el-icon>退出登录
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
-      </el-header>
+      <layout-header
+        :is-collapse="isCollapse"
+        :is-dark="themeStore.isDark"
+        :theme-text="themeStore.themeText"
+        :display-name="displayName"
+        :avatar="userStore.userInfo?.avatar"
+        @toggle-collapse="toggleCollapse"
+        @toggle-theme="themeStore.toggleTheme"
+        @toggle-fullscreen="toggleFullscreen"
+        @open-menu="openDrawer"
+        @command="handleCommand"
+      />
 
       <!-- 主内容区 -->
-      <el-main class="p-5 overflow-auto bg-gray-100 dark:bg-slate-900">
-        <router-view v-slot="{ Component }">
-          <transition name="fade-transform" mode="out-in">
-            <component :is="Component" />
-          </transition>
-        </router-view>
-      </el-main>
+      <main-content />
     </el-container>
   </el-container>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  import { ElMessage, ElMessageBox } from 'element-plus';
-  import {
-    ElementPlus,
-    Fold,
-    Expand,
-    FullScreen,
-    ArrowDown,
-    User,
-    Setting,
-    SwitchButton,
-    Sunny,
-    Moon,
-  } from '@element-plus/icons-vue';
-  import { useUserStore } from '@/store/modules/user';
-  import { usePermissionStore } from '@/store/modules/permission';
-  import { useThemeStore } from '@/store/modules/theme';
-  import Breadcrumb from './components/Breadcrumb.vue';
-  import SidebarMenu from './components/SidebarMenu.vue';
+  // 布局组件
+  import Sidebar from './components/Sidebar.vue';
+  import LayoutHeader from './components/Header.vue';
+  import MainContent from './components/MainContent.vue';
 
-  const route = useRoute();
-  const router = useRouter();
-  const userStore = useUserStore();
-  const permissionStore = usePermissionStore();
+  // 业务逻辑composables
+  import { useSidebar } from './composables/useSidebar';
+  import { useUser } from './composables/useUser';
+  import { useFullscreen } from './composables/useFullscreen';
+
+  // Store
+  import { useThemeStore } from '@/store/modules/theme';
+
+  // 初始化
   const themeStore = useThemeStore();
 
-  // 侧边栏折叠状态
-  const isCollapse = ref(false);
+  // 侧边栏逻辑（包含移动端响应式）
+  const {
+    isCollapse,
+    isMobile,
+    showDrawer,
+    activeMenu,
+    sidebarMenus,
+    toggleCollapse,
+    openDrawer,
+    closeDrawer,
+  } = useSidebar();
 
-  // 当前激活的菜单
-  const activeMenu = computed(() => route.path);
+  // 用户相关逻辑
+  const { userStore, displayName, handleCommand } = useUser();
 
-  // 侧边栏菜单（从 permission store 获取）
-  const sidebarMenus = computed(() => permissionStore.getSidebarMenus);
-
-  // 显示的用户名（昵称优先，然后是用户名）
-  const displayName = computed(() => {
-    const info = userStore.userInfo;
-    return info?.nickname || info?.username || '用户';
-  });
-
-  // 切换侧边栏
-  const toggleCollapse = () => {
-    isCollapse.value = !isCollapse.value;
-  };
-
-  // 切换全屏
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  };
-
-  // 退出登录
-  const handleLogout = async () => {
-    try {
-      await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      });
-      await userStore.logout();
-      ElMessage.success('已退出登录');
-      router.push('/login');
-    } catch {
-      // 取消退出
-    }
-  };
-
-  // 处理下拉菜单命令
-  const handleCommand = (command: string) => {
-    switch (command) {
-      case 'profile':
-        router.push('/user/profile');
-        break;
-      case 'settings':
-        router.push('/user/settings');
-        break;
-      case 'logout':
-        handleLogout();
-        break;
-    }
-  };
+  // 全屏逻辑
+  const { toggleFullscreen } = useFullscreen();
 </script>
 
-<style scoped>
-  /* 页面切换动画 */
-  .fade-transform-leave-active,
-  .fade-transform-enter-active {
-    transition: all 0.3s;
+<style>
+  /* 移动端抽屉样式优化 */
+  .mobile-sidebar-drawer .el-drawer__body {
+    padding: 0 !important;
+    overflow: hidden !important;
   }
 
-  .fade-transform-enter-from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-
-  .fade-transform-leave-to {
-    opacity: 0;
-    transform: translateX(20px);
+  .mobile-sidebar-drawer .el-drawer {
+    background-color: rgb(30 41 59) !important;
   }
 </style>

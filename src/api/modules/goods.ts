@@ -4,7 +4,10 @@ import type {
   GoodsListParams,
   GoodsListResult,
   PublishGoodsParams,
+  PublishGoodsResult,
   UpdateGoodsParams,
+  GoodsDetail,
+  UploadFileResult,
 } from '@/types/modules/goods';
 
 /**
@@ -22,7 +25,8 @@ export const goodsApi = {
    * 发布商品
    * @param data 商品数据
    */
-  publishGoods: (data: PublishGoodsParams) => request.post('/goods/publish', data),
+  publishGoods: (data: PublishGoodsParams) =>
+    request.post<PublishGoodsResult>('/goods/publish', data),
 
   /**
    * 更新商品信息
@@ -51,13 +55,19 @@ export const goodsApi = {
   offShelfGoods: (id: string) => request.post(`/goods/${id}/off`),
 
   /**
+   * 获取商品详情
+   * @param id 商品ID
+   */
+  getGoodsDetail: (id: string) => request.get<GoodsDetail>(`/goods/${id}`),
+
+  /**
    * 上传文件
    * @param file 文件对象
    */
   uploadFile: (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
-    return request.post<{ url: string }>('/goods/upload', formData, {
+    return request.post<UploadFileResult>('/goods/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

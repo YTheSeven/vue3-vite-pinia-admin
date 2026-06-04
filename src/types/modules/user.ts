@@ -44,6 +44,13 @@ export interface ChangePasswordParams {
 }
 
 /**
+ * 修改密码响应
+ */
+export interface ChangePasswordResult {
+  status: string;
+}
+
+/**
  * 删除用户参数
  */
 export interface DeleteUserParams {

@@ -4,9 +4,6 @@ import { ref, computed } from 'vue';
 import { usePermissionStore } from './permission';
 import { resetRouter, resetHasAddedRoutes } from '@/router';
 
-const TOKEN_KEY = 'admin_token';
-const USER_INFO_KEY = 'admin_user_info';
-
 export interface UserInfo {
   id: number | string;
   username: string;
@@ -36,42 +33,18 @@ export const useUserStore = defineStore(
     // ========== Actions ==========
 
     /**
-     * 设置 token 并持久化到 localStorage
+     * 设置 token
      */
     function setToken(newToken: string) {
       token.value = newToken;
-      localStorage.setItem(TOKEN_KEY, newToken);
     }
 
     /**
-     * 设置用户信息并持久化到 localStorage
+     * 设置用户信息
      */
     function setUserInfo(info: UserInfo) {
       userInfo.value = info;
       isLoggedIn.value = true;
-      localStorage.setItem(USER_INFO_KEY, JSON.stringify(info));
-    }
-
-    /**
-     * 从 localStorage 恢复登录状态
-     */
-    function restoreLoginState() {
-      const savedToken = localStorage.getItem(TOKEN_KEY);
-      const savedUserInfo = localStorage.getItem(USER_INFO_KEY);
-
-      if (savedToken && savedUserInfo) {
-        try {
-          token.value = savedToken;
-          userInfo.value = JSON.parse(savedUserInfo);
-          isLoggedIn.value = true;
-          return true;
-        } catch {
-          // 解析失败，清除存储
-          clearUserInfo();
-          return false;
-        }
-      }
-      return false;
     }
 
     /**
@@ -81,8 +54,6 @@ export const useUserStore = defineStore(
       token.value = '';
       userInfo.value = null;
       isLoggedIn.value = false;
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_INFO_KEY);
     }
 
     /**
@@ -134,7 +105,7 @@ export const useUserStore = defineStore(
           permissions,
         };
 
-        // 保存到 store 和 localStorage
+        // 保存到 store
         setToken(mockToken);
         setUserInfo(mockUserInfo);
 
@@ -196,13 +167,13 @@ export const useUserStore = defineStore(
      * 用于应用初始化时调用
      */
     function initAuth() {
-      const hasToken = restoreLoginState();
-      if (hasToken) {
+      if (token.value && userInfo.value) {
         // 可以在这里调用 API 验证 token 是否有效
         // fetchUserInfo()
         console.log('已恢复登录状态');
+        return true;
       }
-      return hasToken;
+      return false;
     }
 
     /**
@@ -236,7 +207,6 @@ export const useUserStore = defineStore(
       setToken,
       setUserInfo,
       clearUserInfo,
-      restoreLoginState,
       login,
       logout,
       fetchUserInfo,
@@ -246,7 +216,12 @@ export const useUserStore = defineStore(
     };
   },
   {
-    // Pinia 持久化配置（可选，如果使用了 pinia-plugin-persistedstate）
-    // persist: true,
+    // Pinia 持久化配置
+    persist: {
+      // 使用 localStorage 存储
+      storage: localStorage,
+      // 持久化指定的状态
+      pick: ['token', 'userInfo', 'isLoggedIn'],
+    },
   }
 );

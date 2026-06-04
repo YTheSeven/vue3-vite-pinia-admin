@@ -4,6 +4,7 @@ import type {
   LoginResult,
   RegisterParams,
   ChangePasswordParams,
+  ChangePasswordResult,
   DeleteUserParams,
   UserInfo,
 } from '@/types/modules/user';
@@ -38,7 +39,8 @@ export const userApi = {
    * 修改密码
    * @param data 修改密码参数
    */
-  changePassword: (data: ChangePasswordParams) => request.patch('/users/password', data),
+  changePassword: (data: ChangePasswordParams) =>
+    request.patch<ChangePasswordResult>('/users/password', data),
 
   /**
    * 删除用户
