@@ -1,3 +1,39 @@
+<script setup lang="ts">
+  import {
+    Fold,
+    Expand,
+    FullScreen,
+    ArrowDown,
+    User,
+    Setting,
+    SwitchButton,
+    Sunny,
+    Moon,
+    Menu,
+  } from '@element-plus/icons-vue';
+  import Breadcrumb from './Breadcrumb.vue';
+
+  defineProps<{
+    isCollapse: boolean;
+    isDark: boolean;
+    themeText: string;
+    displayName: string;
+    avatar?: string;
+  }>();
+
+  const emit = defineEmits<{
+    'toggle-collapse': [];
+    'toggle-theme': [];
+    'toggle-fullscreen': [];
+    'open-menu': [];
+    command: [string];
+  }>();
+
+  const handleCommand = (command: string) => {
+    emit('command', command);
+  };
+</script>
+
 <template>
   <el-header
     class="h-15 bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700/50 flex items-center justify-between px-4 md:px-5"
@@ -41,7 +77,7 @@
       <!-- 全屏按钮（仅桌面端显示） -->
       <el-tooltip content="全屏" placement="bottom">
         <el-icon
-          class="hidden md:block text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+          class="hidden! md:block! text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
           @click="emit('toggle-fullscreen')"
         >
           <FullScreen />
@@ -83,39 +119,3 @@
     </div>
   </el-header>
 </template>
-
-<script setup lang="ts">
-  import {
-    Fold,
-    Expand,
-    FullScreen,
-    ArrowDown,
-    User,
-    Setting,
-    SwitchButton,
-    Sunny,
-    Moon,
-    Menu,
-  } from '@element-plus/icons-vue';
-  import Breadcrumb from './Breadcrumb.vue';
-
-  defineProps<{
-    isCollapse: boolean;
-    isDark: boolean;
-    themeText: string;
-    displayName: string;
-    avatar?: string;
-  }>();
-
-  const emit = defineEmits<{
-    'toggle-collapse': [];
-    'toggle-theme': [];
-    'toggle-fullscreen': [];
-    'open-menu': [];
-    command: [string];
-  }>();
-
-  const handleCommand = (command: string) => {
-    emit('command', command);
-  };
-</script>

@@ -14,7 +14,7 @@
     />
 
     <div
-      class="w-105 p-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl dark:shadow-slate-900/50 relative z-10"
+      class="w-full max-w-[420px] sm:w-105 mx-4 sm:mx-0 p-8 sm:p-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl dark:shadow-slate-900/50 relative z-10"
     >
       <h2 class="text-center mb-8 text-2xl text-gray-800 dark:text-white font-semibold">
         管理系统登录
@@ -83,57 +83,11 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { ElMessage } from 'element-plus';
   import { User, Lock } from '@element-plus/icons-vue';
-  import { useUserStore } from '@/store/modules/user';
-  import { addDynamicRoutes } from '@/router';
+  import { useLogin } from './composables/useLogin';
 
-  const router = useRouter();
-  const userStore = useUserStore();
-
-  const loginFormRef = ref();
-  const loading = ref(false);
-
-  const loginForm = reactive({
-    username: 'admin',
-    password: '123456',
-    remember: false,
-  });
-
-  const loginRules = {
-    username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-  };
-
-  const handleLogin = async () => {
-    if (!loginFormRef.value) return;
-
-    try {
-      await loginFormRef.value.validate();
-      loading.value = true;
-
-      // 根据输入的用户名登录
-      // userStore.login 会根据用户名自动分配对应角色
-      await userStore.login({
-        username: loginForm.username,
-        password: loginForm.password,
-        remember: loginForm.remember,
-      });
-
-      // 加载动态路由
-      await addDynamicRoutes();
-
-      ElMessage.success('登录成功');
-      router.push('/dashboard');
-    } catch (error) {
-      console.error('登录失败:', error);
-      ElMessage.error('登录失败，请检查用户名和密码');
-    } finally {
-      loading.value = false;
-    }
-  };
+  // 使用登录 Hook
+  const { loginFormRef, loading, loginForm, loginRules, handleLogin } = useLogin();
 </script>
 
 <style scoped>

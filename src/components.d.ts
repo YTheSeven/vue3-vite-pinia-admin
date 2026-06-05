@@ -52,7 +52,15 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
+    IEpDelete: typeof import('~icons/ep/delete')['default']
+    IEpLock: typeof import('~icons/ep/lock')['default']
+    IEpPlus: typeof import('~icons/ep/plus')['default']
+    IEpSearch: typeof import('~icons/ep/search')['default']
+    IEpUser: typeof import('~icons/ep/user')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+  }
+  export interface GlobalDirectives {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

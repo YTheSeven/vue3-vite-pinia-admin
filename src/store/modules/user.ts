@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { usePermissionStore } from './permission';
 import { resetRouter, resetHasAddedRoutes } from '@/router';
+import type { LoginParams } from '@/types/modules';
 
 export interface UserInfo {
   id: number | string;
@@ -60,7 +61,7 @@ export const useUserStore = defineStore(
      * 登录
      * @param loginForm 登录表单
      */
-    async function login(loginForm: { username: string; password: string; remember?: boolean }) {
+    async function login(loginForm: LoginParams) {
       try {
         // TODO: 调用登录 API
         // const res = await loginApi(loginForm)

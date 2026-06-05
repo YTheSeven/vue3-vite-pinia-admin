@@ -1,3 +1,4 @@
+import type { PageResult } from '@/types/request';
 import { request } from '../alova';
 import type {
   LoginParams,
@@ -33,7 +34,7 @@ export const userApi = {
   /**
    * 获取用户列表
    */
-  getUserList: () => request.get<UserInfo[]>('/users/list'),
+  getUserList: () => request.get<PageResult<UserInfo>>('/users/list'),
 
   /**
    * 修改密码

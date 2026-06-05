@@ -9,36 +9,36 @@ import { useUserStore } from '@/store/modules/user';
 const baseURL = import.meta.env.VITE_API_BASE_URL ?? '/api';
 
 // 业务错误处理
-const handleBusinessError = async (data: ResponseType) => {
-  const { code, message } = data;
+// const handleBusinessError = (data: ResponseType) => {
+//   const { code, message } = data;
 
-  switch (code) {
-    case 401: {
-      // 未授权，清除登录状态
-      const userStore = useUserStore();
-      await userStore.logout();
-      ElNotification.error({
-        title: '登录过期',
-        message: '请重新登录',
-        duration: 3000,
-      });
-      // 跳转登录页
-      window.location.href = '/login';
-      break;
-    }
-    case 403:
-      ElMessage.error('没有权限访问该资源');
-      break;
-    case 404:
-      ElMessage.error('请求的资源不存在');
-      break;
-    case 500:
-      ElMessage.error('服务器内部错误');
-      break;
-    default:
-      ElMessage.error(message || '请求失败');
-  }
-};
+//   switch (code) {
+//     case 401: {
+//       // 未授权，清除登录状态
+//       const userStore = useUserStore();
+//       void userStore.logout();
+//       ElNotification.error({
+//         title: '登录过期',
+//         message: '请重新登录',
+//         duration: 3000,
+//       });
+//       // 跳转登录页
+//       window.location.href = '/login';
+//       break;
+//     }
+//     case 403:
+//       ElMessage.error('没有权限访问该资源');
+//       break;
+//     case 404:
+//       ElMessage.error('请求的资源不存在');
+//       break;
+//     case 500:
+//       ElMessage.error('服务器内部错误');
+//       break;
+//     default:
+//       ElMessage.error(message || '请求失败');
+//   }
+// };
 
 // 创建 alova 实例
 export const alovaInstance = createAlova({
@@ -161,11 +161,11 @@ export const alovaInstance = createAlova({
         console.log(`[Alova Response] ${method.type} ${method.url}`, data);
       }
 
-      // 业务状态码处理
-      if (data.code !== 200) {
-        await handleBusinessError(data);
-        throw new Error(data.message || '请求失败');
-      }
+      // // 业务状态码处理
+      // if (data.code !== 200) {
+      //   await handleBusinessError(data);
+      //   throw new Error(data.message || '请求失败');
+      // }
 
       return data.data;
     },
@@ -207,7 +207,7 @@ export const alovaInstance = createAlova({
   shareRequest: true,
 
   // 缓存配置
-  cacheLogger: import.meta.env.DEV,
+  // cacheLogger: import.meta.env.DEV,
 
   // 错误重试配置
   // retry: 2,

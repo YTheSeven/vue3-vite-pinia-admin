@@ -26,7 +26,7 @@ export interface DynamicRoute {
 const componentMap: Record<string, () => Promise<Component>> = {
   Layout: () => import('@/layouts/AdminLayout.vue'),
   Dashboard: () => import('@/views/dashboard/DashboardView.vue'),
-  UserManage: () => import('@/views/system/UserManageView.vue'),
+  UserManage: () => import('@/views/system/UserManageView/index.vue'),
   RoleManage: () => import('@/views/system/RoleManageView.vue'),
   PermissionManage: () => import('@/views/system/PermissionManageView.vue'),
   OrderList: () => import('@/views/business/OrderListView.vue'),

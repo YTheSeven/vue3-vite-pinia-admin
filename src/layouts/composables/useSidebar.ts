@@ -1,17 +1,7 @@
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePermissionStore } from '@/store/modules/permission';
-
-// 移动端断点 (768px)
-const MOBILE_BREAKPOINT = 768;
-
-/**
- * 检测是否为移动端
- */
-const checkIsMobile = () => {
-  if (typeof window === 'undefined') return false;
-  return window.innerWidth < MOBILE_BREAKPOINT;
-};
+import { useDevice } from '@/composables/useDevice';
 
 /**
  * 侧边栏相关逻辑
@@ -20,8 +10,8 @@ export function useSidebar() {
   const route = useRoute();
   const permissionStore = usePermissionStore();
 
-  // 是否为移动端（初始值立即检测）
-  const isMobile = ref(checkIsMobile());
+  // 使用 useDevice 进行移动端检测，保持原有 768px 断点
+  const { isMobile } = useDevice({ mobileBreakpoint: 768 });
 
   // 侧边栏折叠状态（桌面端）
   const isCollapse = ref(isMobile.value);
@@ -50,23 +40,11 @@ export function useSidebar() {
     showDrawer.value = false;
   };
 
-  // 检测屏幕尺寸
-  const checkMobile = () => {
-    isMobile.value = window.innerWidth < MOBILE_BREAKPOINT;
-    // 切换到移动端时自动折叠侧边栏
-    if (isMobile.value) {
+  // 监听到移动端时自动折叠侧边栏
+  watch(isMobile, (mobile) => {
+    if (mobile) {
       isCollapse.value = true;
     }
-  };
-
-  // 监听窗口大小变化
-  onMounted(() => {
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-  });
-
-  onUnmounted(() => {
-    window.removeEventListener('resize', checkMobile);
   });
 
   return {

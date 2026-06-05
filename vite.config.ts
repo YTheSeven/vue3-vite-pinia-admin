@@ -7,6 +7,7 @@ import IconsResolver from 'unplugin-icons/resolver';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import ElementPlus from 'unplugin-element-plus/vite';
 import tailwindcss from '@tailwindcss/vite';
+
 import { fileURLToPath, URL } from 'node:url';
 
 // https://vite.dev/config/

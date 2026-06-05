@@ -1,4 +1,3 @@
-import { onMounted } from 'vue';
 import { useThemeStore } from '@/store/modules/theme';
 
 /**

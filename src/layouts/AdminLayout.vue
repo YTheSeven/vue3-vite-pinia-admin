@@ -55,19 +55,15 @@
   import LayoutHeader from './components/Header.vue';
   import MainContent from './components/MainContent.vue';
 
-  // 业务逻辑composables
-  import { useSidebar } from './composables/useSidebar';
-  import { useUser } from './composables/useUser';
-  import { useFullscreen } from './composables/useFullscreen';
+  // 统一入口 composable
+  import { useAdminLayout } from './composables/useAdminLayout';
 
-  // Store
-  import { useThemeStore } from '@/store/modules/theme';
-
-  // 初始化
-  const themeStore = useThemeStore();
-
-  // 侧边栏逻辑（包含移动端响应式）
+  // 解构所有需要的响应式数据和方法
   const {
+    // Theme
+    themeStore,
+
+    // Sidebar
     isCollapse,
     isMobile,
     showDrawer,
@@ -76,13 +72,15 @@
     toggleCollapse,
     openDrawer,
     closeDrawer,
-  } = useSidebar();
 
-  // 用户相关逻辑
-  const { userStore, displayName, handleCommand } = useUser();
+    // User
+    userStore,
+    displayName,
+    handleCommand,
 
-  // 全屏逻辑
-  const { toggleFullscreen } = useFullscreen();
+    // Fullscreen
+    toggleFullscreen,
+  } = useAdminLayout();
 </script>
 
 <style>
