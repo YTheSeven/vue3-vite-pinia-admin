@@ -87,7 +87,7 @@
   import { useLogin } from './composables/useLogin';
 
   // 使用登录 Hook
-  const { loginFormRef, loading, loginForm, loginRules, handleLogin } = useLogin();
+  const { loginFormRef: _loginFormRef, loading, loginForm, loginRules, handleLogin } = useLogin();
 </script>
 
 <style scoped>

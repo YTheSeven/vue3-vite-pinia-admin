@@ -74,7 +74,7 @@ export const useUserStore = defineStore(
         let permissions: string[];
         let nickname: string;
 
-        switch (loginForm.username) {
+        switch (loginForm.user_name) {
           case 'admin':
             roles = ['admin'];
             permissions = ['*'];
@@ -99,7 +99,7 @@ export const useUserStore = defineStore(
         const mockToken = `mock_token_${Date.now()}`;
         const mockUserInfo: UserInfo = {
           id: 1,
-          username: loginForm.username,
+          username: loginForm.user_name,
           nickname,
           avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
           roles,
@@ -112,7 +112,7 @@ export const useUserStore = defineStore(
 
         // 记住用户名
         if (loginForm.remember) {
-          localStorage.setItem('remember_username', loginForm.username);
+          localStorage.setItem('remember_username', loginForm.user_name);
         } else {
           localStorage.removeItem('remember_username');
         }

@@ -67,6 +67,7 @@ export function useLogin(): UseLoginReturn {
       const params: LoginParams = {
         user_name: loginForm.username,
         password: loginForm.password,
+        remember: loginForm.remember,
       };
 
       // 执行登录

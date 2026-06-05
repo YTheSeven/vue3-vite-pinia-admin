@@ -25,6 +25,7 @@ export interface RegisterParams {
 export interface LoginParams {
   user_name: string;
   password: string;
+  remember?: boolean;
 }
 
 /**
