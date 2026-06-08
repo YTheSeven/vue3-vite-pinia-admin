@@ -19,7 +19,7 @@ export const goodsApi = {
    * @param params 查询参数
    */
   getGoodsList: (params?: GoodsListParams & GenericObject) =>
-    request.get<GoodsListResult>('/goods/', { params }),
+    request.get<GoodsListResult>('/goods', { params }),
 
   /**
    * 发布商品

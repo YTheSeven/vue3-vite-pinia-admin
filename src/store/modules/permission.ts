@@ -31,6 +31,7 @@ const componentMap: Record<string, () => Promise<Component>> = {
   PermissionManage: () => import('@/views/system/PermissionManageView.vue'),
   OrderList: () => import('@/views/business/OrderListView.vue'),
   OrderDetail: () => import('@/views/business/OrderDetailView.vue'),
+  GoodsManage: () => import('@/views/business/GoodsManageView/index.vue'),
   Profile: () => import('@/views/user/ProfileView.vue'),
   Settings: () => import('@/views/user/SettingsView.vue'),
 };
@@ -131,6 +132,18 @@ export const usePermissionStore = defineStore('permission', () => {
         },
       },
       {
+        path: '/business/goods',
+        name: 'GoodsManage',
+        component: 'GoodsManage',
+        meta: {
+          title: '商品管理',
+          icon: 'Goods',
+          group: 'business',
+          groupTitle: '业务管理',
+          groupIcon: 'GoodsFilled',
+        },
+      },
+      {
         path: '/system/users',
         name: 'UserManage',
         component: 'UserManage',
@@ -224,6 +237,18 @@ export const usePermissionStore = defineStore('permission', () => {
           title: '订单详情',
           icon: 'Document',
           hidden: true,
+          group: 'business',
+          groupTitle: '业务管理',
+          groupIcon: 'GoodsFilled',
+        },
+      },
+      {
+        path: '/business/goods',
+        name: 'GoodsManage',
+        component: 'GoodsManage',
+        meta: {
+          title: '商品管理',
+          icon: 'Goods',
           group: 'business',
           groupTitle: '业务管理',
           groupIcon: 'GoodsFilled',

@@ -1,6 +1,15 @@
+<script setup lang="ts">
+  import { User, Lock } from '@element-plus/icons-vue';
+  import { useLogin } from './composables/useLogin';
+
+  // 使用登录 Hook
+  // @ts-expect-error loginFormRef is used in template via ref binding
+  const { loginFormRef, loading, loginForm, loginRules, handleLogin } = useLogin();
+</script>
+
 <template>
   <div
-    class="min-h-screen flex justify-center items-center relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+    class="min-h-screen flex justify-center items-center relative overflow-hidden bg-linear-to-br from-slate-900 via-slate-800 to-slate-900"
   >
     <!-- 动态光晕效果 -->
     <div
@@ -14,7 +23,7 @@
     />
 
     <div
-      class="w-full max-w-[420px] sm:w-105 mx-4 sm:mx-0 p-8 sm:p-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl dark:shadow-slate-900/50 relative z-10"
+      class="w-full max-w-105 sm:w-105 mx-4 sm:mx-0 p-8 sm:p-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl dark:shadow-slate-900/50 relative z-10"
     >
       <h2 class="text-center mb-8 text-2xl text-gray-800 dark:text-white font-semibold">
         管理系统登录
@@ -81,14 +90,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-  import { User, Lock } from '@element-plus/icons-vue';
-  import { useLogin } from './composables/useLogin';
-
-  // 使用登录 Hook
-  const { loginFormRef: _loginFormRef, loading, loginForm, loginRules, handleLogin } = useLogin();
-</script>
 
 <style scoped>
   :deep(.el-radio-group) {

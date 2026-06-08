@@ -139,23 +139,30 @@ router.beforeEach(async (to) => {
 
   // 动态添加路由（只在登录后执行一次）
   if (!hasAddedRoutes) {
+    // 在动态路由加载前，先显示加载中的标题
+    document.title = '加载中... - 管理系统';
     try {
       const dynamicRoutes = await addDynamicRoutes();
 
       // 动态添加路由后，手动触发重新导航
       // 检查当前目标路由是否在刚添加的动态路由中
-      const routeExists = dynamicRoutes.some(
+      const matchedDynamicRoute = dynamicRoutes.find(
         (route) => route.path === to.path || (to.name && route.name === to.name)
       );
 
-      if (routeExists || to.matched.length === 0) {
+      if (matchedDynamicRoute || to.matched.length === 0) {
+        // 找到匹配的路由，设置其 title
+        if (matchedDynamicRoute?.meta?.title) {
+          document.title = `${matchedDynamicRoute.meta.title as string} - 管理系统`;
+        }
         // 路由已添加，使用 replace 重新导航到目标路由
         // 返回 false 阻止当前导航，让 router.replace 处理新导航
         await router.replace({ path: to.fullPath, replace: true });
         return false;
       }
 
-      // 如果路由已经匹配，继续正常导航
+      // 如果路由已经匹配，恢复原始标题并继续正常导航
+      document.title = to.meta.title ? `${to.meta.title as string} - 管理系统` : '管理系统';
       return;
     } catch (error) {
       console.error('添加动态路由失败:', error);

@@ -1,7 +1,7 @@
+import type { TemplateRef } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import type { LoginParams } from '@/types/modules/user';
 
-import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { addDynamicRoutes } from '@/router';
 
@@ -15,7 +15,7 @@ export interface LoginForm {
 /** 登录 Hook 返回类型 */
 export interface UseLoginReturn {
   // 表单引用
-  loginFormRef: Ref<FormInstance | undefined>;
+  loginFormRef: TemplateRef<FormInstance | null>;
   // 加载状态
   loading: Ref<boolean>;
   // 表单数据
@@ -35,7 +35,7 @@ export function useLogin(): UseLoginReturn {
   const userStore = useUserStore();
 
   // 表单引用
-  const loginFormRef = ref<FormInstance>();
+  const loginFormRef = useTemplateRef<FormInstance>('loginFormRef');
 
   // 加载状态
   const loading = ref(false);
