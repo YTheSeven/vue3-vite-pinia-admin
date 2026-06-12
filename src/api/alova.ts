@@ -6,7 +6,13 @@ import { ElMessage, ElNotification } from 'element-plus';
 import type { ResponseType, RequestConfig } from '@/types/request';
 import { useUserStore } from '@/store/modules/user';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+let baseURL = '';
+// 判断是build环境还是开发环境
+if (import.meta.env.PROD) {
+  baseURL = import.meta.env.VITE_API_BASE_URL ?? '';
+} else {
+  baseURL = '/api';
+}
 
 // 业务错误处理
 // const handleBusinessError = (data: ResponseType) => {
