@@ -1,4 +1,3 @@
-import type { PageResult } from '@/types/request';
 import { request } from '../alova';
 import type {
   LoginParams,
@@ -7,7 +6,10 @@ import type {
   ChangePasswordParams,
   ChangePasswordResult,
   DeleteUserParams,
-  UserInfo,
+  UserListParams,
+  UserListData,
+  UserDetail,
+  UpdateUserParams,
 } from '@/types/modules/user';
 
 /**
@@ -33,8 +35,22 @@ export const userApi = {
 
   /**
    * 获取用户列表
+   * @param params 查询参数
    */
-  getUserList: () => request.get<PageResult<UserInfo>>('/users/list'),
+  getUserList: (params: UserListParams) => request.get<UserListData>('/users/list', { params }),
+
+  /**
+   * 获取用户详情
+   * @param id 用户ID
+   */
+  getUserDetail: (id: string) => request.get<UserDetail>(`/users/${id}`),
+
+  /**
+   * 更新用户信息
+   * @param id 用户ID
+   * @param data 更新参数
+   */
+  updateUser: (id: string, data: UpdateUserParams) => request.put(`/users/${id}`, data),
 
   /**
    * 修改密码

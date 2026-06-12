@@ -29,6 +29,12 @@
     detailDrawerVisible,
     goodsDetail,
 
+    // 图片预览
+    showImageViewer,
+    imageViewerUrlList,
+    imageViewerInitialIndex,
+    handleIntroduceClick,
+
     // 操作
     handleAdd,
     handleEdit,
@@ -53,7 +59,7 @@
 
 <template>
   <div
-    class="min-h-screen p-4 transition-colors duration-300 bg-gray-50 text-slate-900 dark:bg-slate-900 dark:text-white sm:p-6"
+    class="p-4 transition-colors duration-300 bg-gray-50 text-slate-900 dark:bg-slate-900 dark:text-white sm:p-6"
   >
     <div class="mx-auto max-w-7xl">
       <!-- 页面标题 -->
@@ -125,6 +131,13 @@
             </template>
           </el-table-column>
           <el-table-column prop="goods_number" label="库存" width="100" align="center" />
+          <el-table-column label="状态" width="100" align="center">
+            <template #default="{ row }">
+              <el-tag :type="row.goods_status === 1 ? 'success' : 'info'" size="small">
+                {{ row.goods_status === 1 ? '已上架' : '已下架' }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" :width="isMobile ? 80 : 200" fixed="right" align="center">
             <template #default="{ row }">
               <div class="flex flex-col gap-2 sm:flex-row sm:justify-center">
@@ -137,7 +150,7 @@
                   编辑
                 </el-button>
                 <el-button
-                  v-if="false"
+                  v-if="row.goods_status === 0"
                   type="success"
                   link
                   size="small"
@@ -169,7 +182,7 @@
             v-model:page-size="pageSize"
             :total="total"
             :page-sizes="[10, 20, 50]"
-            layout="total, sizes, prev, pager, next"
+            layout="total, sizes, prev, next"
             class="hidden! sm:flex!"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -180,10 +193,9 @@
             v-model:page-size="pageSize"
             :total="total"
             :page-sizes="[10, 20]"
-            layout="prev, pager, next, sizes"
-            :pager-count="3"
+            layout="prev, next, sizes"
             class="flex sm:hidden! justify-center"
-            small
+            size="small"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
           />
@@ -245,6 +257,16 @@
             </div>
           </div>
 
+          <!-- 商品介绍（富文本） -->
+          <div v-if="goodsDetail.goods_introduce" class="mt-6">
+            <h3 class="mb-3 text-lg font-medium">商品介绍</h3>
+            <div
+              class="prose prose-sm max-w-none dark:prose-invert overflow-auto rounded-lg border border-gray-200 p-4 dark:border-gray-700 cursor-pointer"
+              v-html="goodsDetail.goods_introduce"
+              @click="handleIntroduceClick"
+            />
+          </div>
+
           <div class="mt-6">
             <h3 class="mb-3 text-lg font-medium">SKU 信息</h3>
             <el-table :data="goodsDetail.sku_info" border size="small">
@@ -259,6 +281,16 @@
           </div>
         </div>
       </el-drawer>
+
+      <!-- 富文本图片预览 -->
+      <teleport to="body">
+        <el-image-viewer
+          v-if="showImageViewer"
+          :url-list="imageViewerUrlList"
+          :initial-index="imageViewerInitialIndex"
+          @close="showImageViewer = false"
+        />
+      </teleport>
     </div>
   </div>
 </template>

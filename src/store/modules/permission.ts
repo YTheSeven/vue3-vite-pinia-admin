@@ -25,15 +25,15 @@ export interface DynamicRoute {
 // 组件映射表（后端返回的组件名 -> 实际组件）
 const componentMap: Record<string, () => Promise<Component>> = {
   Layout: () => import('@/layouts/AdminLayout.vue'),
-  Dashboard: () => import('@/views/dashboard/DashboardView.vue'),
+  Dashboard: () => import('@/views/dashboard/DashboardView/index.vue'),
   UserManage: () => import('@/views/system/UserManageView/index.vue'),
   RoleManage: () => import('@/views/system/RoleManageView.vue'),
   PermissionManage: () => import('@/views/system/PermissionManageView.vue'),
-  OrderList: () => import('@/views/business/OrderListView.vue'),
-  OrderDetail: () => import('@/views/business/OrderDetailView.vue'),
+  OrderList: () => import('@/views/business/OrderListView/index.vue'),
+  OrderDetail: () => import('@/views/business/OrderDetailView/index.vue'),
   GoodsManage: () => import('@/views/business/GoodsManageView/index.vue'),
-  Profile: () => import('@/views/user/ProfileView.vue'),
-  Settings: () => import('@/views/user/SettingsView.vue'),
+  Profile: () => import('@/views/user/ProfileView/index.vue'),
+  // Settings: () => import('@/views/user/SettingsView/index.vue'),
 };
 
 export const usePermissionStore = defineStore('permission', () => {
@@ -191,18 +191,18 @@ export const usePermissionStore = defineStore('permission', () => {
           groupIcon: 'UserFilled',
         },
       },
-      {
-        path: '/user/settings',
-        name: 'Settings',
-        component: 'Settings',
-        meta: {
-          title: '系统设置',
-          icon: 'Setting',
-          group: 'user',
-          groupTitle: '个人中心',
-          groupIcon: 'UserFilled',
-        },
-      },
+      // {
+      //   path: '/user/settings',
+      //   name: 'Settings',
+      //   component: 'Settings',
+      //   meta: {
+      //     title: '系统设置',
+      //     icon: 'Setting',
+      //     group: 'user',
+      //     groupTitle: '个人中心',
+      //     groupIcon: 'UserFilled',
+      //   },
+      // },
     ];
   }
 

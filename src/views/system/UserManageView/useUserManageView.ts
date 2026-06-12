@@ -77,8 +77,8 @@ export function useUserManageView(): UseUserManageViewReturn {
   const initData = async (): Promise<void> => {
     isLoading.value = true;
     try {
-      const res = await userApi.getUserList();
-      userList.value = res.list ?? [];
+      const data = await userApi.getUserList({ page: 1, page_size: 100 });
+      userList.value = data.list ?? [];
     } catch (error) {
       ElMessage.error('获取用户列表失败');
       console.error(error);

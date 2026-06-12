@@ -118,12 +118,12 @@ export function useGoodsDialog(fetchList: () => Promise<void>): UseGoodsDialogRe
         goods_name: detail.goods_name,
         goods_cover: detail.goods_cover,
         goods_images: detail.goods_images || [],
-        description: '', // API 返回中可能没有 description，需要根据实际情况调整
+        description: detail.goods_introduce || '',
         sku_info: detail.sku_info.map((sku) => ({
           id: sku.id,
           name: sku.name,
           price: sku.price,
-          reserve: sku.reserve,
+          reserve: sku.reserve ?? 0,
         })),
       };
       dialogVisible.value = true;
@@ -163,36 +163,28 @@ export function useGoodsDialog(fetchList: () => Promise<void>): UseGoodsDialogRe
 
   /** 提交表单 */
   const submitForm = async (): Promise<void> => {
+    // 构建提交参数，将 description 映射为 goods_introduce
+    const baseParams = {
+      goods_name: form.value.goods_name,
+      goods_cover: form.value.goods_cover,
+      goods_images: form.value.goods_images,
+      goods_introduce: form.value.description, // 映射到 goods_introduce
+      sku_info: form.value.sku_info.map((sku) => ({
+        id: sku.id ?? 0,
+        name: sku.name,
+        price: sku.price,
+        reserve: sku.reserve,
+      })),
+    };
+
     if (isEdit.value) {
       // 编辑
-      const params: UpdateGoodsParams = {
-        goods_name: form.value.goods_name,
-        goods_cover: form.value.goods_cover,
-        goods_images: form.value.goods_images,
-        description: form.value.description,
-        sku_info: form.value.sku_info.map((sku) => ({
-          id: sku.id ?? 0,
-          name: sku.name,
-          price: sku.price,
-          reserve: sku.reserve,
-        })),
-      };
+      const params: UpdateGoodsParams = baseParams;
       await goodsApi.updateGoods(String(currentEditId.value), params);
       ElMessage.success('更新商品成功');
     } else {
       // 新增
-      const params: PublishGoodsParams = {
-        goods_name: form.value.goods_name,
-        goods_cover: form.value.goods_cover,
-        goods_images: form.value.goods_images,
-        description: form.value.description,
-        sku_info: form.value.sku_info.map((sku) => ({
-          id: sku.id ?? 0,
-          name: sku.name,
-          price: sku.price,
-          reserve: sku.reserve,
-        })),
-      };
+      const params: PublishGoodsParams = baseParams;
       await goodsApi.publishGoods(params);
       ElMessage.success('新增商品成功');
     }

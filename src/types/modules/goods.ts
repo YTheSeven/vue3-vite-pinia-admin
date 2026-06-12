@@ -21,6 +21,8 @@ export interface GoodsInfo {
   goods_price: string;
   goods_number: number;
   goods_cover: string;
+  /** 商品状态（上架1，下架0） */
+  goods_status: number;
 }
 
 /**
@@ -48,7 +50,7 @@ export interface PublishGoodsParams {
   goods_name: string;
   goods_cover: string;
   goods_images: string[];
-  description: string;
+  goods_introduce: string;
   sku_info: SkuInfo[];
 }
 
@@ -59,7 +61,7 @@ export interface UpdateGoodsParams {
   goods_name?: string;
   goods_cover?: string;
   goods_images?: string[];
-  description?: string;
+  goods_introduce?: string;
   sku_info?: SkuInfo[];
 }
 
@@ -74,10 +76,11 @@ export interface PublishGoodsResult {
  * 商品详情
  */
 export interface GoodsDetail {
-  id: string;
+  id: number;
   goods_name: string;
   goods_cover: string;
   goods_images: string[];
+  goods_introduce: string;
   sku_info: SkuInfo[];
 }
 

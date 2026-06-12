@@ -1,19 +1,33 @@
-import { delay } from '@/utils/utils';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { usePermissionStore } from './permission';
 import { resetRouter, resetHasAddedRoutes } from '@/router';
-import type { LoginParams } from '@/types/modules';
+import { userApi } from '@/api/modules/user';
+import type { LoginParams, UserDetail } from '@/types/modules';
 
 export interface UserInfo {
-  id: number | string;
+  /** 用户ID */
+  id: number;
+  /** 登录用户名 */
   username: string;
-  nickname?: string;
-  avatar?: string;
-  email?: string;
-  phone?: string;
-  roles?: string[];
-  permissions?: string[];
+  /** 昵称 */
+  nickname: string;
+  /** 头像URL */
+  avatar: string;
+  /** 邮箱 */
+  email: string;
+  /** 手机号 */
+  phone: string;
+  /** 个人简介 */
+  bio: string;
+  /** 性别：0-未知，1-男，2-女 */
+  gender: 0 | 1 | 2;
+  /** 生日 */
+  birthday: string;
+  /** 角色列表 */
+  roles: string[];
+  /** 权限列表 */
+  permissions: string[];
 }
 
 export const useUserStore = defineStore(
@@ -63,13 +77,10 @@ export const useUserStore = defineStore(
      */
     async function login(loginForm: LoginParams) {
       try {
-        // TODO: 调用登录 API
-        // const res = await loginApi(loginForm)
+        // 调用登录 API
+        const loginResult = await userApi.login(loginForm);
 
-        // 模拟登录成功
-        await delay(800); // 模拟网络延迟
-
-        // 根据用户名分配不同角色
+        // 根据用户名分配角色和权限（mock 数据环境下，按账号区分权限）
         let roles: string[];
         let permissions: string[];
         let nickname: string;
@@ -82,33 +93,54 @@ export const useUserStore = defineStore(
             break;
           case 'operator':
             roles = ['operator'];
-            permissions = ['order:view', 'order:edit'];
+            permissions = ['order:view', 'order:edit', 'goods:view', 'goods:edit'];
             nickname = '运营人员';
             break;
           case 'user':
             roles = ['user'];
-            permissions = ['profile:view'];
+            permissions = ['profile:view', 'profile:edit'];
             nickname = '普通用户';
             break;
           default:
+            // 其他账号默认作为普通用户
             roles = ['user'];
-            permissions = ['profile:view'];
-            nickname = '访客';
+            permissions = ['profile:view', 'profile:edit'];
+            nickname = loginForm.user_name;
         }
 
-        const mockToken = `mock_token_${Date.now()}`;
-        const mockUserInfo: UserInfo = {
-          id: 1,
+        // 先保存 token
+        setToken(loginResult.token);
+
+        // 获取完整的用户详情（包含 email, phone, bio 等）
+        let userDetail: UserDetail | null = null;
+        try {
+          // 尝试获取用户详情
+          // 注意：用户详情接口需要 user_id，但登录接口不返回 user_id
+          // 这里暂时使用 username 作为 id，或者后端需要调整登录接口返回 user_id
+          const detailRes = await userApi.getUserDetail(loginForm.user_name);
+          userDetail = detailRes;
+        } catch {
+          // 如果获取失败，使用登录返回的基本信息
+          console.warn('获取用户详情失败，使用登录返回的基本信息');
+        }
+
+        // 构建完整的用户信息
+        const fullUserInfo: UserInfo = {
+          id: userDetail?.id ?? 0,
           username: loginForm.user_name,
-          nickname,
-          avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+          nickname: userDetail?.nickname ?? loginResult.user_info.name ?? nickname,
+          avatar: userDetail?.avatar ?? loginResult.user_info.avatar ?? '',
+          email: userDetail?.email ?? '',
+          phone: userDetail?.phone ?? '',
+          bio: userDetail?.bio ?? '',
+          gender: (userDetail?.gender as 0 | 1 | 2) ?? 0,
+          birthday: userDetail?.birthday ?? '',
           roles,
           permissions,
         };
 
         // 保存到 store
-        setToken(mockToken);
-        setUserInfo(mockUserInfo);
+        setUserInfo(fullUserInfo);
 
         // 记住用户名
         if (loginForm.remember) {
@@ -119,6 +151,8 @@ export const useUserStore = defineStore(
 
         return Promise.resolve();
       } catch (error) {
+        // 登录失败，清除可能已保存的 token
+        clearUserInfo();
         return Promise.reject(error);
       }
     }
@@ -151,10 +185,25 @@ export const useUserStore = defineStore(
      */
     async function fetchUserInfo() {
       try {
-        // TODO: 调用获取用户信息 API
-        // const res = await getUserInfoApi()
-        // setUserInfo(res)
-        console.log('获取用户信息成功');
+        if (!userInfo.value) {
+          return Promise.reject(new Error('用户未登录'));
+        }
+
+        const userId = userInfo.value.id.toString();
+        const detail = await userApi.getUserDetail(userId);
+
+        // 更新 store 中的用户信息（保留 roles 和 permissions）
+        setUserInfo({
+          ...userInfo.value,
+          nickname: detail.nickname,
+          avatar: detail.avatar,
+          email: detail.email,
+          phone: detail.phone,
+          bio: detail.bio,
+          gender: detail.gender,
+          birthday: detail.birthday,
+        });
+
         return Promise.resolve();
       } catch (error) {
         // 获取失败，可能是 token 过期

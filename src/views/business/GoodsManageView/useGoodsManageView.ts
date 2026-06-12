@@ -3,6 +3,7 @@ import type { Ref, ComputedRef } from 'vue';
 
 import { goodsApi } from '@/api/modules/goods';
 import { useGoodsDialog } from './composables/useGoodsDialog';
+import { useGoodsImageViewer } from './composables/useGoodsImageViewer';
 import type { GoodsForm } from './composables/useGoodsDialog';
 import type { FormRules } from 'element-plus';
 
@@ -48,6 +49,12 @@ export interface UseGoodsManageViewReturn {
   // 分页相关
   handleSizeChange: (val: number) => void;
   handleCurrentChange: (val: number) => void;
+
+  // 图片预览
+  showImageViewer: Ref<boolean>;
+  imageViewerUrlList: Ref<string[]>;
+  imageViewerInitialIndex: Ref<number>;
+  handleIntroduceClick: (event: MouseEvent) => void;
 
   // 其他
   fetchGoodsList: () => Promise<void>;
@@ -107,6 +114,18 @@ export function useGoodsManageView(): UseGoodsManageViewReturn {
   // ==================== 使用弹窗 Hook ====================
   const goodsDialog = useGoodsDialog(fetchGoodsList);
 
+  // ==================== 使用图片预览 Hook ====================
+  const imageViewer = useGoodsImageViewer();
+
+  // ==================== 查看详情 ====================
+  const detailDrawerVisible = ref<boolean>(false);
+  const goodsDetail = ref<GoodsDetail | null>(null);
+
+  // 包装点击图片处理方法，自动传入 goodsDetail
+  const handleIntroduceClick = (event: MouseEvent): void => {
+    imageViewer.handleIntroduceClick(event, goodsDetail.value);
+  };
+
   // 包装提交方法以添加 loading 状态
   const handleSubmit = async (): Promise<void> => {
     submitLoading.value = true;
@@ -116,10 +135,6 @@ export function useGoodsManageView(): UseGoodsManageViewReturn {
       submitLoading.value = false;
     }
   };
-
-  // ==================== 查看详情 ====================
-  const detailDrawerVisible = ref<boolean>(false);
-  const goodsDetail = ref<GoodsDetail | null>(null);
 
   /** 查看商品详情 */
   const handleView = async (row: GoodsInfo): Promise<void> => {
@@ -216,6 +231,12 @@ export function useGoodsManageView(): UseGoodsManageViewReturn {
     detailDrawerVisible,
     goodsDetail,
     handleView,
+
+    // 图片预览
+    showImageViewer: imageViewer.showImageViewer,
+    imageViewerUrlList: imageViewer.imageViewerUrlList,
+    imageViewerInitialIndex: imageViewer.imageViewerInitialIndex,
+    handleIntroduceClick,
 
     // 上下架
     handleToggleShelf,

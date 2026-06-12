@@ -6,6 +6,7 @@ import type {
   OrderListParams,
   OrderListResult,
   OrderDetail,
+  UpdateOrderParams,
 } from '@/types/modules/order';
 
 /**
@@ -36,4 +37,17 @@ export const orderApi = {
    * @param id 订单ID
    */
   cancelOrder: (id: string) => request.post(`/orders/${id}/off`),
+
+  /**
+   * 订单发货
+   * @param id 订单ID
+   */
+  shipOrder: (id: string) => request.post(`/orders/${id}/ship`),
+
+  /**
+   * 更新订单
+   * @param id 订单ID
+   * @param data 订单更新数据
+   */
+  updateOrder: (id: string, data: UpdateOrderParams) => request.put(`/orders/${id}`, data),
 };
