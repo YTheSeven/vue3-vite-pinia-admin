@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ECharts: typeof import('./components/ECharts.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
@@ -63,6 +64,8 @@ declare module 'vue' {
     IEpBottom: typeof import('~icons/ep/bottom')['default']
     IEpCamera: typeof import('~icons/ep/camera')['default']
     IEpCheck: typeof import('~icons/ep/check')['default']
+    IEpCpu: typeof import('~icons/ep/cpu')['default']
+    IEpDataLine: typeof import('~icons/ep/data-line')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
     IEpEdit: typeof import('~icons/ep/edit')['default']
     IEpGrid: typeof import('~icons/ep/grid')['default']
@@ -72,6 +75,7 @@ declare module 'vue' {
     IEpMessage: typeof import('~icons/ep/message')['default']
     IEpPhone: typeof import('~icons/ep/phone')['default']
     IEpPicture: typeof import('~icons/ep/picture')['default']
+    IEpPieChart: typeof import('~icons/ep/pie-chart')['default']
     IEpPlus: typeof import('~icons/ep/plus')['default']
     IEpRefresh: typeof import('~icons/ep/refresh')['default']
     IEpRefreshRight: typeof import('~icons/ep/refresh-right')['default']

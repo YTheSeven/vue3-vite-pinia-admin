@@ -3,7 +3,11 @@
   import { ElMessage } from 'element-plus';
   import { useUserStore } from '@/store/modules/user';
   import { useDashboardView } from './useDashboardView';
+  import { deepClone } from '@/utils/utils';
   import Iconify from '@/components/Iconify.vue';
+  import ECharts from '@/components/ECharts.vue';
+
+  import type { ECElementEvent, EChartsOption } from 'echarts';
 
   // ==========================================
   // 组件逻辑 - 严格遵守逻辑分离原则
@@ -23,8 +27,18 @@
     completedTodosCount,
     totalTodosCount,
     completionRate,
+    chartOption,
+    cpuChartOption,
+    pieChartOption,
+    barChartOption,
     deleteTodo,
+    handlePieClick,
   } = useDashboardView();
+
+  /** 处理饼图点击事件 */
+  const onPieChartClick = (params: ECElementEvent): void => {
+    handlePieClick(params);
+  };
 
   /** 获取优先级标签类型 */
   const getPriorityType = (priority: string): string => {
@@ -59,6 +73,13 @@
   const handleAddTodo = (): void => {
     ElMessage.info('添加待办功能开发中');
   };
+
+  /** 图表配置 getter 函数，确保响应式更新 */
+  const getChartOption = (): EChartsOption => chartOption.value;
+  // CPU 图表需要深拷贝确保 watch 检测到数据变化
+  const getCpuChartOption = (): EChartsOption => deepClone(cpuChartOption.value);
+  const getPieChartOption = (): EChartsOption => pieChartOption.value;
+  const getBarChartOption = (): EChartsOption => barChartOption.value;
 </script>
 
 <template>
@@ -66,7 +87,7 @@
     <div class="max-w-7xl mx-auto space-y-6">
       <!-- 欢迎区域 -->
       <div
-        class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 sm:p-8 shadow-lg"
+        class="relative overflow-hidden rounded-2xl bg-linear-to-r from-blue-500 to-purple-600 text-white p-6 sm:p-8 shadow-lg"
       >
         <div class="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
           <div class="flex-1 text-center sm:text-left">
@@ -90,7 +111,7 @@
               </el-tag>
             </div>
           </div>
-          <div class="flex-shrink-0">
+          <div class="shrink-0">
             <el-avatar
               :size="80"
               :src="userStore.userInfo?.avatar"
@@ -115,7 +136,7 @@
           >
             <div class="flex items-center gap-4">
               <div
-                class="w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center text-white text-xl"
+                class="w-12 h-12 rounded-xl bg-linear-to-br flex items-center justify-center text-white text-xl"
                 :class="stat.color"
               >
                 <Iconify :name="stat.icon" />
@@ -200,30 +221,9 @@
                 <el-radio-button value="year">本年</el-radio-button>
               </el-radio-group>
             </div>
-            <!-- 模拟图表 -->
-            <div
-              class="h-64 flex items-end justify-around gap-2 pb-6 border-b border-gray-200 dark:border-slate-700"
-            >
-              <div
-                v-for="i in 7"
-                :key="i"
-                class="flex-1 bg-gradient-to-t from-blue-500 to-blue-300 dark:from-blue-600 dark:to-blue-400 rounded-t transition-all duration-500 hover:opacity-80 relative group"
-                :style="{ height: `${Math.random() * 60 + 20}%` }"
-              >
-                <div
-                  class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
-                >
-                  {{ Math.floor(Math.random() * 1000 + 500) }} 访问
-                </div>
-              </div>
-            </div>
-            <div class="flex justify-around pt-4 text-sm text-gray-500 dark:text-gray-400">
-              <span
-                v-for="day in ['周一', '周二', '周三', '周四', '周五', '周六', '周日']"
-                :key="day"
-              >
-                {{ day }}
-              </span>
+            <!-- ECharts 图表 -->
+            <div class="h-64">
+              <ECharts :option="getChartOption" :auto-resize="true" />
             </div>
           </div>
         </el-col>
@@ -299,6 +299,71 @@
         </el-col>
       </el-row>
 
+      <!-- 第二行：实时 CPU 监控 -->
+      <el-row :gutter="20">
+        <el-col :xs="24" :lg="12" class="mb-4">
+          <div
+            class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 h-full"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <h3
+                class="text-lg font-semibold text-gray-800 dark:text-white flex items-center gap-2"
+              >
+                <el-icon class="text-green-500"><i-ep-cpu /></el-icon>
+                页面性能
+              </h3>
+              <el-tag type="success" effect="plain" size="small">
+                <span class="flex items-center gap-1">
+                  <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                  实时监控中
+                </span>
+              </el-tag>
+            </div>
+            <div class="h-56">
+              <ECharts :option="getCpuChartOption" :auto-resize="true" />
+            </div>
+          </div>
+        </el-col>
+
+        <el-col :xs="24" :lg="12" class="mb-4">
+          <div
+            class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 h-full"
+          >
+            <h3
+              class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2"
+            >
+              <el-icon class="text-purple-500"><i-ep-pie-chart /></el-icon>
+              产品份额分布
+            </h3>
+            <div class="h-56">
+              <ECharts :option="getPieChartOption" :auto-resize="true" @click="onPieChartClick" />
+            </div>
+            <div class="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+              点击饼图区域可联动查看季度销售数据
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+
+      <!-- 第三行：季度销售对比（联动饼图） -->
+      <el-row :gutter="20">
+        <el-col :xs="24" class="mb-4">
+          <div
+            class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-slate-700"
+          >
+            <h3
+              class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2"
+            >
+              <el-icon class="text-orange-500"><i-ep-data-line /></el-icon>
+              季度销售对比
+            </h3>
+            <div class="h-64">
+              <ECharts :option="getBarChartOption" :auto-resize="true" />
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+
       <!-- 底部：最近活动 -->
       <div
         class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-slate-700"
@@ -316,7 +381,7 @@
             class="flex items-start gap-4 pb-4 border-b border-gray-100 dark:border-slate-700 last:border-0 last:pb-0"
           >
             <div
-              class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-medium flex-shrink-0"
+              class="w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-medium shrink-0"
             >
               {{ activity.user.charAt(0) }}
             </div>
