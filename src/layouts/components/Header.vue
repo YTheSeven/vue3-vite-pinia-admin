@@ -10,6 +10,7 @@
     Sunny,
     Moon,
     Menu,
+    Refresh,
   } from '@element-plus/icons-vue';
   import Breadcrumb from './Breadcrumb.vue';
 
@@ -19,6 +20,7 @@
     themeText: string;
     displayName: string;
     avatar?: string;
+    isRefreshing?: boolean;
   }>();
 
   const emit = defineEmits<{
@@ -26,6 +28,7 @@
     'toggle-theme': [];
     'toggle-fullscreen': [];
     'open-menu': [];
+    'refresh-permission': [];
     command: [string];
   }>();
 
@@ -71,6 +74,17 @@
         >
           <Sunny v-if="!isDark" />
           <Moon v-else />
+        </el-icon>
+      </el-tooltip>
+
+      <!-- 刷新权限按钮 -->
+      <el-tooltip content="刷新权限（修改权限后点击生效）" placement="bottom">
+        <el-icon
+          class="text-lg md:text-xl cursor-pointer text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+          :class="{ 'animate-spin': isRefreshing }"
+          @click="emit('refresh-permission')"
+        >
+          <Refresh />
         </el-icon>
       </el-tooltip>
 

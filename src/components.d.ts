@@ -12,6 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ECharts: typeof import('./components/ECharts.vue')['default']
+    ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
@@ -19,6 +20,7 @@ declare module 'vue' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
+    ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
     ElContainer: typeof import('element-plus/es')['ElContainer']
@@ -68,7 +70,9 @@ declare module 'vue' {
     IEpDataLine: typeof import('~icons/ep/data-line')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
     IEpEdit: typeof import('~icons/ep/edit')['default']
+    IEpElementPlus: typeof import('~icons/ep/element-plus')['default']
     IEpGrid: typeof import('~icons/ep/grid')['default']
+    IEpInfoFilled: typeof import('~icons/ep/info-filled')['default']
     IEpKey: typeof import('~icons/ep/key')['default']
     IEpLoading: typeof import('~icons/ep/loading')['default']
     IEpLock: typeof import('~icons/ep/lock')['default']

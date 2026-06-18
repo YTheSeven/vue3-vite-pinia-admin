@@ -1,6 +1,7 @@
 import type { Component } from 'vue';
 import type { RouteRecordRaw } from 'vue-router';
 import { useUserStore } from './user';
+import { useMockPermissionStore } from './mockPermission';
 import { delay } from '@/utils/utils';
 
 // 动态路由配置项
@@ -27,7 +28,7 @@ const componentMap: Record<string, () => Promise<Component>> = {
   Layout: () => import('@/layouts/AdminLayout.vue'),
   Dashboard: () => import('@/views/dashboard/DashboardView/index.vue'),
   UserManage: () => import('@/views/system/UserManageView/index.vue'),
-  RoleManage: () => import('@/views/system/RoleManageView.vue'),
+  RoleManage: () => import('@/views/system/RoleManageView/index.vue'),
   PermissionManage: () => import('@/views/system/PermissionManageView.vue'),
   OrderList: () => import('@/views/business/OrderListView/index.vue'),
   OrderDetail: () => import('@/views/business/OrderDetailView/index.vue'),
@@ -58,7 +59,7 @@ export const usePermissionStore = defineStore('permission', () => {
     const permissions = userStore.getUserPermissions;
 
     // 模拟从后端获取路由配置
-    const routeData = await fetchRoutesFromServer(roles);
+    const routeData = await fetchRoutesFromServer();
 
     // 生成动态路由
     const routes = filterAndConvertRoutes(routeData, roles, permissions);
@@ -74,31 +75,31 @@ export const usePermissionStore = defineStore('permission', () => {
 
   /**
    * 模拟从服务器获取路由配置
+   * 现在从 mockPermissionStore 读取配置，支持动态修改
    */
-  async function fetchRoutesFromServer(roles: string[]): Promise<DynamicRoute[]> {
+  async function fetchRoutesFromServer(): Promise<DynamicRoute[]> {
     // 模拟 API 调用延迟
     await delay(300);
 
-    // 根据角色返回不同的菜单
-    if (roles.includes('admin')) {
-      // 管理员 - 拥有所有权限
-      return getAdminRoutes();
-    } else if (roles.includes('operator')) {
-      // 运营人员 - 只能看订单相关
-      return getOperatorRoutes();
-    } else if (roles.includes('user')) {
-      // 普通用户 - 只能看个人信息
-      return getUserRoutes();
+    const mockStore = useMockPermissionStore();
+    const userStore = useUserStore();
+    const username = userStore.getUserInfo?.username;
+
+    if (!username) {
+      return getBasicRoutes();
     }
 
-    // 默认返回基础路由
-    return getBasicRoutes();
+    // 从 mockPermissionStore 获取该用户可访问的菜单列表
+    const allowedMenus = mockStore.getUserMenus(username);
+
+    // 根据允许的菜单过滤路由
+    return filterRoutesByMenus(getAllRoutes(), allowedMenus);
   }
 
   /**
-   * 管理员路由配置
+   * 获取所有可用路由配置
    */
-  function getAdminRoutes(): DynamicRoute[] {
+  function getAllRoutes(): DynamicRoute[] {
     return [
       {
         path: '/dashboard',
@@ -167,93 +168,7 @@ export const usePermissionStore = defineStore('permission', () => {
           groupIcon: 'Setting',
         },
       },
-      {
-        path: '/system/permissions',
-        name: 'PermissionManage',
-        component: 'PermissionManage',
-        meta: {
-          title: '权限管理',
-          icon: 'Lock',
-          group: 'system',
-          groupTitle: '系统管理',
-          groupIcon: 'Setting',
-        },
-      },
-      {
-        path: '/user/profile',
-        name: 'Profile',
-        component: 'Profile',
-        meta: {
-          title: '个人资料',
-          icon: 'User',
-          group: 'user',
-          groupTitle: '个人中心',
-          groupIcon: 'UserFilled',
-        },
-      },
-      // {
-      //   path: '/user/settings',
-      //   name: 'Settings',
-      //   component: 'Settings',
-      //   meta: {
-      //     title: '系统设置',
-      //     icon: 'Setting',
-      //     group: 'user',
-      //     groupTitle: '个人中心',
-      //     groupIcon: 'UserFilled',
-      //   },
-      // },
-    ];
-  }
-
-  /**
-   * 运营人员路由配置
-   */
-  function getOperatorRoutes(): DynamicRoute[] {
-    return [
-      {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: 'Dashboard',
-        meta: { title: '首页', icon: 'HomeFilled' },
-      },
-      {
-        path: '/business/orders',
-        name: 'OrderList',
-        component: 'OrderList',
-        meta: {
-          title: '订单列表',
-          icon: 'List',
-          group: 'business',
-          groupTitle: '业务管理',
-          groupIcon: 'GoodsFilled',
-        },
-      },
-      {
-        path: '/business/orders/:id',
-        name: 'OrderDetail',
-        component: 'OrderDetail',
-        meta: {
-          title: '订单详情',
-          icon: 'Document',
-          hidden: true,
-          group: 'business',
-          groupTitle: '业务管理',
-          groupIcon: 'GoodsFilled',
-        },
-      },
-      {
-        path: '/business/goods',
-        name: 'GoodsManage',
-        component: 'GoodsManage',
-        meta: {
-          title: '商品管理',
-          icon: 'Goods',
-          group: 'business',
-          groupTitle: '业务管理',
-          groupIcon: 'GoodsFilled',
-        },
-      },
+      // 注：PermissionManage 路由已移除（演示模式不需要权限管理页面）
       {
         path: '/user/profile',
         name: 'Profile',
@@ -270,29 +185,17 @@ export const usePermissionStore = defineStore('permission', () => {
   }
 
   /**
-   * 普通用户路由配置
+   * 根据允许的菜单列表过滤路由
    */
-  function getUserRoutes(): DynamicRoute[] {
-    return [
-      {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: 'Dashboard',
-        meta: { title: '首页', icon: 'HomeFilled' },
-      },
-      {
-        path: '/user/profile',
-        name: 'Profile',
-        component: 'Profile',
-        meta: {
-          title: '个人资料',
-          icon: 'User',
-          group: 'user',
-          groupTitle: '个人中心',
-          groupIcon: 'UserFilled',
-        },
-      },
-    ];
+  function filterRoutesByMenus(routes: DynamicRoute[], allowedMenus: string[]): DynamicRoute[] {
+    return routes.filter((route) => {
+      // 首页始终允许
+      if (route.name === 'Dashboard') {
+        return true;
+      }
+      // 检查是否在允许的菜单列表中
+      return allowedMenus.includes(route.name);
+    });
   }
 
   /**

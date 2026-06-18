@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { usePermissionStore } from './permission';
+import { useMockPermissionStore } from './mockPermission';
 import { resetRouter, resetHasAddedRoutes } from '@/router';
 import { userApi } from '@/api/modules/user';
 import type { LoginParams, UserDetail } from '@/types/modules';
@@ -80,33 +81,18 @@ export const useUserStore = defineStore(
         // 调用登录 API
         const loginResult = await userApi.login(loginForm);
 
-        // 根据用户名分配角色和权限（mock 数据环境下，按账号区分权限）
-        let roles: string[];
-        let permissions: string[];
-        let nickname: string;
+        // 从 mockPermissionStore 获取角色和权限配置
+        const mockPermissionStore = useMockPermissionStore();
+        const roles = mockPermissionStore.getUserRoleCodes(loginForm.user_name);
+        const permissions = mockPermissionStore.getUserPermissions(loginForm.user_name);
 
-        switch (loginForm.user_name) {
-          case 'admin':
-            roles = ['admin'];
-            permissions = ['*'];
-            nickname = '管理员';
-            break;
-          case 'operator':
-            roles = ['operator'];
-            permissions = ['order:view', 'order:edit', 'goods:view', 'goods:edit'];
-            nickname = '运营人员';
-            break;
-          case 'user':
-            roles = ['user'];
-            permissions = ['profile:view', 'profile:edit'];
-            nickname = '普通用户';
-            break;
-          default:
-            // 其他账号默认作为普通用户
-            roles = ['user'];
-            permissions = ['profile:view', 'profile:edit'];
-            nickname = loginForm.user_name;
-        }
+        // 根据角色获取昵称
+        const roleNicknameMap: Record<string, string> = {
+          admin: '管理员',
+          operator: '运营人员',
+          user: '普通用户',
+        };
+        const nickname = roleNicknameMap[roles[0]] || loginForm.user_name;
 
         // 先保存 token
         setToken(loginResult.token);
@@ -115,8 +101,6 @@ export const useUserStore = defineStore(
         let userDetail: UserDetail | null = null;
         try {
           // 尝试获取用户详情
-          // 注意：用户详情接口需要 user_id，但登录接口不返回 user_id
-          // 这里暂时使用 username 作为 id，或者后端需要调整登录接口返回 user_id
           const detailRes = await userApi.getUserDetail(loginForm.user_name);
           userDetail = detailRes;
         } catch {

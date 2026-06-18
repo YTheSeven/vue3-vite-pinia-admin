@@ -36,10 +36,12 @@
         :theme-text="themeStore.themeText"
         :display-name="displayName"
         :avatar="userStore.userInfo?.avatar"
+        :is-refreshing="isRefreshing"
         @toggle-collapse="toggleCollapse"
         @toggle-theme="themeStore.toggleTheme"
         @toggle-fullscreen="toggleFullscreen"
         @open-menu="openDrawer"
+        @refresh-permission="refreshPermission"
         @command="handleCommand"
       />
 
@@ -67,11 +69,13 @@
     isCollapse,
     isMobile,
     showDrawer,
+    isRefreshing,
     activeMenu,
     sidebarMenus,
     toggleCollapse,
     openDrawer,
     closeDrawer,
+    refreshPermission,
 
     // User
     userStore,

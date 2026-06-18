@@ -12,7 +12,7 @@ export function useDashboardStats(): UseDashboardStatsReturn {
   /** 显示的用户名 */
   const displayName = computed<string>(() => {
     const info = userStore.userInfo;
-    return info?.nickname || info?.username || '用户';
+    return info?.nickname ?? info?.username ?? '用户';
   });
 
   /** 当前日期 */

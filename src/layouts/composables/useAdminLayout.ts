@@ -17,11 +17,13 @@ export function useAdminLayout() {
     isCollapse,
     isMobile,
     showDrawer,
+    isRefreshing,
     activeMenu,
     sidebarMenus,
     toggleCollapse,
     openDrawer,
     closeDrawer,
+    refreshPermission,
   } = useSidebar();
 
   // 用户相关逻辑
@@ -38,11 +40,13 @@ export function useAdminLayout() {
     isCollapse,
     isMobile,
     showDrawer,
+    isRefreshing,
     activeMenu,
     sidebarMenus,
     toggleCollapse,
     openDrawer,
     closeDrawer,
+    refreshPermission,
 
     // User
     userStore,
