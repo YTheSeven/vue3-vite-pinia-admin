@@ -95,18 +95,28 @@ export function useUserManageView() {
 
   // ========== Form Rules ==========
 
-  const validateConfirmPassword = async (_rule: unknown, value: string) => {
+  const validateConfirmPassword = (
+    _rule: unknown,
+    value: string,
+    callback: (error?: Error) => void
+  ) => {
     if (value !== addForm.value.password) {
-      return Promise.reject(new Error('两次输入的密码不一致'));
+      callback(new Error('两次输入的密码不一致'));
+    } else {
+      callback();
     }
-    return Promise.resolve();
   };
 
-  const validateEditConfirmPassword = async (_rule: unknown, value: string) => {
+  const validateEditConfirmPassword = (
+    _rule: unknown,
+    value: string,
+    callback: (error?: Error) => void
+  ) => {
     if (value !== editPasswordForm.value.password) {
-      return Promise.reject(new Error('两次输入的密码不一致'));
+      callback(new Error('两次输入的密码不一致'));
+    } else {
+      callback();
     }
-    return Promise.resolve();
   };
 
   const addFormRules: FormRules<AddUserForm> = {

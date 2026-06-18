@@ -20,7 +20,9 @@
 
     "typescript/no-explicit-any": "warn",
     "typescript/prefer-nullish-coalescing": "warn",
-    "typescript/consistent-type-imports": "error"
+    "typescript/consistent-type-imports": "error",
+
+    "promise/prefer-await-to-callbacks": "off"
   },
   "ignorePatterns": ["dist", "node_modules", "*.min.js", "public", ".vite"]
 }
