@@ -8,6 +8,7 @@ export interface PermissionItem {
   code: string;
   type: 'menu' | 'button' | 'api';
   parentId?: string;
+  children?: PermissionItem[];
 }
 
 /** 角色配置 */

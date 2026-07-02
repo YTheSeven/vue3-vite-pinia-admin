@@ -6,6 +6,15 @@ import { usePermissionStore } from '@/store/modules/permission';
 // 常量路由（不需要权限）
 const constantRoutes: RouteRecordRaw[] = [
   {
+    path: '/landing',
+    name: 'Landing',
+    component: () => import('@/views/landing/LandingView/index.vue'),
+    meta: {
+      public: true,
+      title: 'YTheSeven - Vue 生态探险家',
+    },
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/LoginView.vue'),
