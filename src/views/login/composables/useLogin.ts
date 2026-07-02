@@ -77,7 +77,7 @@ export function useLogin(): UseLoginReturn {
       await addDynamicRoutes();
 
       ElMessage.success('登录成功');
-      await router.push('/dashboard');
+      await router.push('/admin/dashboard');
     } catch (error) {
       console.error('登录失败:', error);
       ElMessage.error('登录失败，请检查用户名和密码');

@@ -1,6 +1,6 @@
 <template>
   <el-breadcrumb separator="/">
-    <el-breadcrumb-item :to="{ path: '/' }">
+    <el-breadcrumb-item :to="{ path: '/admin/dashboard' }">
       <el-icon><HomeFilled /></el-icon>
       <span class="breadcrumb-text">首页</span>
     </el-breadcrumb-item>

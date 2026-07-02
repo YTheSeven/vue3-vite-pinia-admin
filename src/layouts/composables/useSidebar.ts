@@ -94,7 +94,7 @@ export function useSidebar() {
       if (currentRouteName && currentRouteName !== 'Dashboard') {
         const hasAccess = permissionStore.getDynamicRoutes.some((r) => r.name === currentRouteName);
         if (!hasAccess) {
-          void router.push('/dashboard');
+          void router.push('/admin/dashboard');
           ElMessage.warning('当前页面已无权访问，已跳转至首页');
         }
       }

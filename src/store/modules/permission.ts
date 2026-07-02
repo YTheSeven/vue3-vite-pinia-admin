@@ -102,13 +102,13 @@ export const usePermissionStore = defineStore('permission', () => {
   function getAllRoutes(): DynamicRoute[] {
     return [
       {
-        path: '/dashboard',
+        path: '/admin/dashboard',
         name: 'Dashboard',
         component: 'Dashboard',
         meta: { title: '首页', icon: 'HomeFilled' },
       },
       {
-        path: '/business/orders',
+        path: '/admin/business/orders',
         name: 'OrderList',
         component: 'OrderList',
         meta: {
@@ -120,7 +120,7 @@ export const usePermissionStore = defineStore('permission', () => {
         },
       },
       {
-        path: '/business/orders/:id',
+        path: '/admin/business/orders/:id',
         name: 'OrderDetail',
         component: 'OrderDetail',
         meta: {
@@ -133,7 +133,7 @@ export const usePermissionStore = defineStore('permission', () => {
         },
       },
       {
-        path: '/business/goods',
+        path: '/admin/business/goods',
         name: 'GoodsManage',
         component: 'GoodsManage',
         meta: {
@@ -145,7 +145,7 @@ export const usePermissionStore = defineStore('permission', () => {
         },
       },
       {
-        path: '/system/users',
+        path: '/admin/system/users',
         name: 'UserManage',
         component: 'UserManage',
         meta: {
@@ -157,7 +157,7 @@ export const usePermissionStore = defineStore('permission', () => {
         },
       },
       {
-        path: '/system/roles',
+        path: '/admin/system/roles',
         name: 'RoleManage',
         component: 'RoleManage',
         meta: {
@@ -170,7 +170,7 @@ export const usePermissionStore = defineStore('permission', () => {
       },
       // 注：PermissionManage 路由已移除（演示模式不需要权限管理页面）
       {
-        path: '/user/profile',
+        path: '/admin/user/profile',
         name: 'Profile',
         component: 'Profile',
         meta: {
@@ -204,7 +204,7 @@ export const usePermissionStore = defineStore('permission', () => {
   function getBasicRoutes(): DynamicRoute[] {
     return [
       {
-        path: '/dashboard',
+        path: '/admin/dashboard',
         name: 'Dashboard',
         component: 'Dashboard',
         meta: { title: '首页', icon: 'HomeFilled' },

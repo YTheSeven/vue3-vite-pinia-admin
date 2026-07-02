@@ -37,7 +37,6 @@ const createLocalStorageMock = () => {
     }),
     // 删除数据
     removeItem: vi.fn((key: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete store[key];
     }),
     // 清空所有数据

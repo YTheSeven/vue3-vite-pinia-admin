@@ -6,8 +6,17 @@ import { usePermissionStore } from '@/store/modules/permission';
 // 常量路由（不需要权限）
 const constantRoutes: RouteRecordRaw[] = [
   {
-    path: '/landing',
+    path: '/',
     name: 'Landing',
+    component: () => import('@/views/landing/LandingView/index.vue'),
+    meta: {
+      public: true,
+      title: 'YTheSeven - Vue 生态探险家',
+    },
+  },
+  {
+    path: '/landing',
+    name: 'LandingAlias',
     component: () => import('@/views/landing/LandingView/index.vue'),
     meta: {
       public: true,
@@ -24,10 +33,10 @@ const constantRoutes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/',
+    path: '/admin',
     name: 'Layout',
     component: () => import('@/layouts/AdminLayout.vue'),
-    redirect: '/dashboard',
+    redirect: '/admin/dashboard',
     children: [],
   },
   {
@@ -51,8 +60,8 @@ let hasInitAuth = false;
 // 动态路由是否已添加
 let hasAddedRoutes = false;
 
-// 白名单路由
-const whiteList = ['/login', '/404', '/403', '/'];
+// 白名单路由（无需登录即可访问）
+const whiteList = ['/login', '/404', '/403', '/', '/landing'];
 
 /**
  * 添加动态路由
@@ -119,24 +128,26 @@ router.beforeEach(async (to) => {
     userStore.initAuth();
     hasInitAuth = true;
   }
+  // 根路径和 landing 页面特殊处理
+  if (to.path === '/' || to.path === '/landing') {
+    // 已登录用户访问首页，重定向到管理后台
+    if (userStore.isLoggedIn) {
+      return '/admin/dashboard';
+    }
+    // 未登录用户直接显示 landing 页面
+    return;
+  }
+
   // 如果是白名单路由，直接放行
   if (whiteList.includes(to.path)) {
-    // 未登录用户访问根路径，重定向到登录页
-    if (to.path === '/' && !userStore.isLoggedIn) {
-      return '/login';
-    }
-    // 已登录用户访问根路径，重定向到首页
-    if (to.path === '/' && userStore.isLoggedIn) {
-      return '/dashboard';
-    }
     return;
   }
 
   // 如果是公开页面，直接放行
   if (to.meta.public) {
-    // 已登录用户访问登录页，重定向到首页
+    // 已登录用户访问登录页，重定向到管理后台首页
     if (to.path === '/login' && userStore.isLoggedIn) {
-      return '/dashboard';
+      return '/admin/dashboard';
     }
     return;
   }
@@ -195,5 +206,16 @@ router.beforeEach(async (to) => {
 router.afterEach(() => {
   // console.log('路由跳转:', to.path);
 });
+
+/**
+ * 路由导航辅助函数
+ */
+export function navigateToAdmin() {
+  return router.push('/admin/dashboard');
+}
+
+export function navigateToLanding() {
+  return router.push('/');
+}
 
 export default router;
