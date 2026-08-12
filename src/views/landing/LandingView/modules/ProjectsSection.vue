@@ -3,6 +3,7 @@
     name: string;
     description: string;
     tags: string[];
+    icon?: string;
     github?: string;
     demo?: string;
     image?: string;
@@ -85,7 +86,7 @@
             <div
               class="relative w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-3xl border border-white/20 group-hover:scale-110 transition-transform duration-300"
             >
-              {{ ['🚀', '🎨', '📦', '📝'][index % 4] }}
+              {{ project.icon || ['🚀', '📱', '📦', '📝'][index % 4] }}
             </div>
 
             <!-- 悬停遮罩 -->
@@ -175,7 +176,7 @@
       <!-- 查看更多 -->
       <div class="mt-12 text-center" data-aos="fade-up" data-aos-delay="400">
         <a
-          href="https://github.com"
+          href="https://github.com/YTheSeven"
           target="_blank"
           class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 text-gray-400 hover:text-white hover:border-white/20 transition-all duration-300 group"
         >

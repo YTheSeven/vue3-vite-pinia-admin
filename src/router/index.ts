@@ -128,16 +128,8 @@ router.beforeEach(async (to) => {
     userStore.initAuth();
     hasInitAuth = true;
   }
-  // 根路径和 landing 页面特殊处理
-  if (to.path === '/' || to.path === '/landing') {
-    // 已登录用户访问首页，重定向到管理后台
-    if (userStore.isLoggedIn) {
-      return '/admin/dashboard';
-    }
-    // 未登录用户直接显示 landing 页面
-    return;
-  }
-
+  // 白名单中包含 /、/landing 展示页，无论登录与否均直接放行
+  // （已登录用户访问展示页不再重定向到管理后台）
   // 如果是白名单路由，直接放行
   if (whiteList.includes(to.path)) {
     return;

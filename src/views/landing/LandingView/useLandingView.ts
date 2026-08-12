@@ -37,6 +37,7 @@ interface ProjectItem {
   name: string;
   description: string;
   tags: string[];
+  icon?: string;
   github?: string;
   demo?: string;
   image?: string;
@@ -93,7 +94,7 @@ export function useLandingView() {
     },
     {
       label: '开源项目',
-      value: 12,
+      value: 2,
       suffix: '',
       icon: 'github',
       color: 'from-purple-500 to-pink-500',
@@ -170,30 +171,19 @@ export function useLandingView() {
   // ========== 项目展示数据 ==========
   const projects = ref<ProjectItem[]>([
     {
-      name: 'Vue Admin Pro',
-      description: '基于 Vue 3 的现代化后台管理系统，集成多种实用功能',
-      tags: ['Vue 3', 'TypeScript', 'Element Plus'],
-      github: '#',
+      name: 'vue3-vite-pinia-admin',
+      description: '基于 Vue 3 + Vite + Pinia 的后台管理系统，集成权限管理、数据可视化等实用功能',
+      tags: ['Vue 3', 'TypeScript', 'Element Plus', 'Pinia'],
+      icon: '🚀',
+      github: 'https://github.com/YTheSeven/vue3-vite-pinia-admin',
       demo: '/login',
     },
     {
-      name: 'Mini UI',
-      description: '轻量级 Vue 组件库，追求极致的简洁与易用',
-      tags: ['Vue 3', 'Rollup', 'Sass'],
-      github: '#',
-    },
-    {
-      name: 'Code Snippets',
-      description: '日常开发中积累的工具函数与代码片段集合',
-      tags: ['TypeScript', 'Utils'],
-      github: '#',
-    },
-    {
-      name: 'Blog Theme',
-      description: '专为开发者设计的极简博客主题，支持暗黑模式',
-      tags: ['Vue 3', 'VitePress', 'Tailwind'],
-      github: '#',
-      demo: '#',
+      name: 'dope-kit',
+      description: '基于 uni-app 的微信小程序，使用 Vite + Vue 3 + TypeScript + Oxc 构建',
+      tags: ['uni-app', 'Vue 3', 'TypeScript', 'Vite'],
+      icon: '📱',
+      github: 'https://github.com/YTheSeven/dope-kit',
     },
   ]);
 
