@@ -1,10 +1,10 @@
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { orderApi } from '@/api/modules/order';
-import type { OrderInfo } from '@/types/modules/order';
+import type { OrderDetail, OrderInfo } from '@/types/modules/order';
 import { OrderStatusMap } from '@/types/modules/order';
 import type { Ref } from 'vue';
+import { useOrderDetailDialog } from './composables/useOrderDetailDialog';
 
 /** useOrderListView 返回类型 */
 export interface UseOrderListViewReturn {
@@ -35,6 +35,12 @@ export interface UseOrderListViewReturn {
   handleCancel: (row: OrderInfo) => Promise<void>;
   handleSizeChange: (val: number) => void;
   handleCurrentChange: (val: number) => void;
+
+  // 详情弹窗
+  dialogVisible: Ref<boolean>;
+  detailLoading: Ref<boolean>;
+  orderDetail: Ref<OrderDetail | null>;
+  closeDetail: () => void;
 }
 
 /**
@@ -42,7 +48,9 @@ export interface UseOrderListViewReturn {
  * @returns 订单列表相关的状态和方法
  */
 export function useOrderListView(): UseOrderListViewReturn {
-  const router = useRouter();
+  // ==================== 详情弹窗 ====================
+  const { dialogVisible, detailLoading, orderDetail, openDetail, closeDetail } =
+    useOrderDetailDialog();
 
   // ==================== 加载状态 ====================
   const loading = ref<boolean>(false);
@@ -120,9 +128,9 @@ export function useOrderListView(): UseOrderListViewReturn {
     ElMessage.success('订单导出成功');
   };
 
-  /** 查看详情 */
+  /** 查看详情（弹窗展示） */
   const handleView = (row: OrderInfo): void => {
-    void router.push(`/business/orders/${row.id}`);
+    void openDetail(row);
   };
 
   /** 取消订单 */
@@ -185,5 +193,11 @@ export function useOrderListView(): UseOrderListViewReturn {
     handleCancel,
     handleSizeChange,
     handleCurrentChange,
+
+    // 详情弹窗
+    dialogVisible,
+    detailLoading,
+    orderDetail,
+    closeDetail,
   };
 }

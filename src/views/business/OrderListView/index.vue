@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useOrderListView } from './useOrderListView';
+  import OrderDetailDialog from './components/OrderDetailDialog.vue';
 
   const {
     loading,
@@ -19,6 +20,9 @@
     handleCancel,
     handleSizeChange,
     handleCurrentChange,
+    dialogVisible,
+    detailLoading,
+    orderDetail,
   } = useOrderListView();
 </script>
 
@@ -234,6 +238,13 @@
           @current-change="handleCurrentChange"
         />
       </div>
+
+      <!-- 订单详情弹窗 -->
+      <OrderDetailDialog
+        v-model:visible="dialogVisible"
+        :order="orderDetail"
+        :loading="detailLoading"
+      />
     </el-card>
   </div>
 </template>
